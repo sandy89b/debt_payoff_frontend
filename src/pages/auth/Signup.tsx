@@ -30,7 +30,7 @@ export const Signup: React.FC = () => {
   const [awaitingVerification, setAwaitingVerification] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signUp, verifyCode, resendCode, sendVerificationCode, verifyAccountCode, signInWithGoogle, isLoading } = useAuth();
+  const { signUp, verifyCode, resendCode, sendVerificationCode, verifyAccountCode, isLoading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -198,17 +198,9 @@ export const Signup: React.FC = () => {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      const delay = new Promise((res) => setTimeout(res, 3000));
-      await Promise.all([delay, signInWithGoogle()]);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to sign in with Google. Please try again.",
-        variant: "destructive",
-      });
-    }
+  const handleGoogleSignIn = () => {
+    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+    window.location.assign(`${apiBase}/api/auth/google/start`);
   };
 
   return (
@@ -478,6 +470,9 @@ export const Signup: React.FC = () => {
                     <span>Continue with Google</span>
                   </span>
                 </Button>
+                <div className="sr-only">
+                  <a href={(import.meta.env.VITE_API_URL || 'http://localhost:3001') + '/api/auth/google/start'}>Google OAuth</a>
+                </div>
               </div>
             )}
           </CardContent>

@@ -20,7 +20,7 @@ export const Signin: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { signIn, signInWithGoogle, isLoading } = useAuth();
+  const { signIn, isLoading } = useAuth();
 
   // Get the page user was trying to access before being redirected, default to dashboard
   const from = location.state?.from?.pathname || '/dashboard';
@@ -88,16 +88,10 @@ export const Signin: React.FC = () => {
     navigate('/auth/forgot-password');
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      await signInWithGoogle();
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to sign in with Google. Please try again.",
-        variant: "destructive",
-      });
-    }
+  const handleGoogleSignIn = () => {
+    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+    // Navigate directly to backend redirect endpoint to avoid CORS/fetch timeouts
+    window.location.assign(`${apiBase}/api/auth/google/start`);
   };
 
   return (
@@ -286,6 +280,10 @@ export const Signin: React.FC = () => {
                   <span>Continue with Google</span>
                 </span>
               </Button>
+              {/* Fallback anchor in case JS handlers are blocked */}
+              <div className="sr-only">
+                <a href={(import.meta.env.VITE_API_URL || 'http://localhost:3001') + '/api/auth/google/start'}>Google OAuth</a>
+              </div>
             </div>
           </CardContent>
 
