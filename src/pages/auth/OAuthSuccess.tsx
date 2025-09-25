@@ -29,23 +29,57 @@ const OAuthSuccess: React.FC = () => {
         }
 
         if (token) {
-          // Store the token and refresh auth state
+          // Store the token first
           localStorage.setItem('auth_token', token);
           localStorage.setItem('auth_status', 'authenticated');
           
-          // Refresh auth context
-          refreshAuth();
-          
-          toast({
-            title: "Success",
-            description: "You have been signed in successfully!",
-            variant: "success",
-          });
+          // Fetch user data from backend using the token
+          try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/google/me`, {
+              headers: {
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true',
+                'Authorization': `Bearer ${token}`
+              }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success && data.data?.user) {
+              // Store user data in localStorage
+              localStorage.setItem('user_data', JSON.stringify(data.data.user));
+              
+              // Refresh auth context to update the state
+              refreshAuth();
+              
+              toast({
+                title: "Success",
+                description: "You have been signed in successfully!",
+                variant: "success",
+              });
 
-          // Redirect to dashboard after a short delay
-          setTimeout(() => {
-            navigate('/dashboard', { replace: true });
-          }, 2000);
+              // Redirect to dashboard after a short delay
+              setTimeout(() => {
+                navigate('/dashboard', { replace: true });
+              }, 2000);
+            } else {
+              throw new Error(data.message || 'Failed to fetch user data');
+            }
+          } catch (fetchError) {
+            console.error('Error fetching user data:', fetchError);
+            // Fallback: try to use refreshAuth anyway in case user data is cached
+            refreshAuth();
+            
+            toast({
+              title: "Success",
+              description: "You have been signed in successfully!",
+              variant: "success",
+            });
+
+            setTimeout(() => {
+              navigate('/dashboard', { replace: true });
+            }, 2000);
+          }
         } else {
           setError('No authentication token received');
         }
