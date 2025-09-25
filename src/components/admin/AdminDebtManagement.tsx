@@ -54,6 +54,7 @@ export const AdminDebtManagement: React.FC = () => {
     const token = localStorage.getItem('auth_token');
     return {
       'Content-Type': 'application/json',
+      'ngrok-skip-browser-warning': 'true', // ✅ NEW: Prevents ngrok browser warning
       ...(token && { 'Authorization': `Bearer ${token}` })
     };
   };
