@@ -128,12 +128,19 @@ export const Signup: React.FC = () => {
   };
 
   const handleSelectVerificationMethod = async (method: 'email' | 'phone') => {
+    // Prevent duplicate calls
+    if (isLoading) {
+      console.log('handleSelectVerificationMethod: Already processing, skipping');
+      return;
+    }
+
     setVerificationMethod(method);
     setAwaitingVerification(true);
     
     const contact = method === 'email' ? pendingEmail : pendingPhone;
     if (!contact) return;
 
+    console.log('handleSelectVerificationMethod: Processing method:', method, 'contact:', contact);
     const success = await sendVerificationCode(method, contact);
     if (success) {
       toast({

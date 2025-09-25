@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { 
   Mail, 
   Send, 
@@ -82,6 +83,7 @@ interface EmailAnalytics {
 
 const EmailAutomation: React.FC = () => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
   const [campaigns, setCampaigns] = useState<EmailCampaign[]>([]);
   const [emailLogs, setEmailLogs] = useState<LeadEmailLog[]>([]);
@@ -110,9 +112,33 @@ const EmailAutomation: React.FC = () => {
 
   const [testEmail, setTestEmail] = useState('');
 
+  // Get authentication headers for API calls
+  const getAuthHeaders = () => {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    return headers;
+  };
+
   useEffect(() => {
+    // Check if user is admin
+    if (user && user.role !== 'admin') {
+      toast({
+        title: "Access Denied",
+        description: "You need admin privileges to access email automation.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     loadData();
-  }, []);
+  }, [user]);
 
   const loadData = async () => {
     try {
@@ -137,29 +163,58 @@ const EmailAutomation: React.FC = () => {
 
   const loadTemplates = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/email-automation/templates`, {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      console.log('API URL:', apiUrl);
+      console.log('Full URL:', `${apiUrl}/api/email-automation/templates`);
+      
+      const response = await fetch(`${apiUrl}/api/email-automation/templates`, {
         headers: getAuthHeaders()
       });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
       const data = await response.json();
       if (data.success) {
         setTemplates(data.data || []);
+      } else {
+        throw new Error(data.message || 'Failed to load templates');
       }
     } catch (error) {
       console.error('Error loading templates:', error);
+      toast({
+        title: "Error loading templates",
+        description: error instanceof Error ? error.message : 'Unknown error occurred',
+        variant: "destructive",
+      });
     }
   };
 
   const loadCampaigns = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/email-automation/campaigns`, {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      console.log('Loading campaigns from:', `${apiUrl}/api/email-automation/campaigns`);
+      
+      const response = await fetch(`${apiUrl}/api/email-automation/campaigns`, {
         headers: getAuthHeaders()
       });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
       const data = await response.json();
       if (data.success) {
         setCampaigns(data.data || []);
+      } else {
+        throw new Error(data.message || 'Failed to load campaigns');
       }
     } catch (error) {
       console.error('Error loading campaigns:', error);
+      toast({
+        title: "Error loading campaigns",
+        description: error instanceof Error ? error.message : 'Unknown error occurred',
+        variant: "destructive",
+      });
     }
   };
 
@@ -189,14 +244,6 @@ const EmailAutomation: React.FC = () => {
     } catch (error) {
       console.error('Error loading analytics:', error);
     }
-  };
-
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem('auth_token');
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : ''
-    };
   };
 
   const createTemplate = async () => {
@@ -367,6 +414,21 @@ const EmailAutomation: React.FC = () => {
     };
     return labels[triggerEvent] || triggerEvent;
   };
+
+  // Check if user is admin
+  if (user && user.role !== 'admin') {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-center">
+          <div className="text-center">
+            <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h2>
+            <p className="text-gray-600">You need admin privileges to access email automation.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
