@@ -68,8 +68,9 @@ const App = () => {
                 <ConditionalLayout>
                   <Routes>
                     {/* Public Routes - No Authentication Required */}
-                    {/* Redirect root to dashboard */}
-                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                    {/* Redirect root to calculator (public) */}
+                    <Route path="/" element={<Navigate to="/calculator" replace />} />
+                    <Route path="/calculator" element={<Index />} />
                     <Route path="/auth/signin" element={<Signin />} />
                     <Route path="/auth/signup" element={<Signup />} />
                     <Route path="/auth/forgot-password" element={<ForgotPassword />} />
@@ -78,34 +79,33 @@ const App = () => {
                     <Route path="/auth/success" element={<OAuthSuccess />} />
                     <Route path="/auth/error" element={<OAuthError />} />
                     
-                    {/* Public Routes - Previously protected */}
-                    <Route path="/calculator" element={<Index />} />
-                    <Route path="/dashboard" element={<DashboardOverview />} />
-                    <Route path="/account" element={<UserSettingsLayout />}>
+                    {/* Protected Routes - Require Authentication */}
+                    <Route path="/dashboard" element={<ProtectedRoute><DashboardOverview /></ProtectedRoute>} />
+                    <Route path="/account" element={<ProtectedRoute><UserSettingsLayout /></ProtectedRoute>}>
                       <Route path="settings" element={<AccountSettings />} />
                       <Route path="security" element={<SecuritySettings />} />
                     </Route>
-                    <Route path="/user-guide" element={<UserGuidePage />} />
-                    <Route path="/calendar" element={<PaymentCalendar debts={debts} />} />
-                    <Route path="/calendar/goals" element={<GoalPlanning debts={debts} />} />
-                    <Route path="/calendar/reminders" element={<Reminders debts={debts} />} />
-                    <Route path="/calendar/export" element={<Export debts={debts} />} />
-                    <Route path="/framework" element={<InteractiveFramework />} />
-                    <Route path="/devotionals" element={<DailyDevotionals />} />
-                    <Route path="/achievements" element={<Achievements />} />
-                    <Route path="/accountability" element={<Accountability />} />
-                    <Route path="/prayers" element={<PrayerIntegration />} />
-                    <Route path="/income-optimization" element={<IncomeOptimization />} />
-                    <Route path="/emergency-fund-calculator" element={<EmergencyFundCalculator />} />
-                    <Route path="/giving-stewardship-tracker" element={<GivingStewardshipTracker />} />
-                    <Route path="/legacy-planning" element={<LegacyPlanning />} />
-                    <Route path="/coaching" element={<CoachingIntegration />} />
+                    <Route path="/user-guide" element={<ProtectedRoute><UserGuidePage /></ProtectedRoute>} />
+                    <Route path="/calendar" element={<ProtectedRoute><PaymentCalendar debts={debts} /></ProtectedRoute>} />
+                    <Route path="/calendar/goals" element={<ProtectedRoute><GoalPlanning debts={debts} /></ProtectedRoute>} />
+                    <Route path="/calendar/reminders" element={<ProtectedRoute><Reminders debts={debts} /></ProtectedRoute>} />
+                    <Route path="/calendar/export" element={<ProtectedRoute><Export debts={debts} /></ProtectedRoute>} />
+                    <Route path="/framework" element={<ProtectedRoute><InteractiveFramework /></ProtectedRoute>} />
+                    <Route path="/devotionals" element={<ProtectedRoute><DailyDevotionals /></ProtectedRoute>} />
+                    <Route path="/achievements" element={<ProtectedRoute><Achievements /></ProtectedRoute>} />
+                    <Route path="/accountability" element={<ProtectedRoute><Accountability /></ProtectedRoute>} />
+                    <Route path="/prayers" element={<ProtectedRoute><PrayerIntegration /></ProtectedRoute>} />
+                    <Route path="/income-optimization" element={<ProtectedRoute><IncomeOptimization /></ProtectedRoute>} />
+                    <Route path="/emergency-fund-calculator" element={<ProtectedRoute><EmergencyFundCalculator /></ProtectedRoute>} />
+                    <Route path="/giving-stewardship-tracker" element={<ProtectedRoute><GivingStewardshipTracker /></ProtectedRoute>} />
+                    <Route path="/legacy-planning" element={<ProtectedRoute><LegacyPlanning /></ProtectedRoute>} />
+                    <Route path="/coaching" element={<ProtectedRoute><CoachingIntegration /></ProtectedRoute>} />
                     
-                    {/* Admin Routes - Now public for viewing */}
-                    <Route path="/admin/email-automation" element={<EmailAutomationSimple />} />
-                    <Route path="/admin/debt-manage" element={<AdminDebtManagement />} />
-                    <Route path="/admin/lead-manage" element={<LeadManagement />} />
-                    <Route path="/admin/lead-analytics" element={<LeadEmailAnalytics />} />
+                    {/* Admin Routes - Require Admin Role */}
+                    <Route path="/admin/email-automation" element={<AdminRoute><EmailAutomationSimple /></AdminRoute>} />
+                    <Route path="/admin/debt-manage" element={<AdminRoute><AdminDebtManagement /></AdminRoute>} />
+                    <Route path="/admin/lead-manage" element={<AdminRoute><LeadManagement /></AdminRoute>} />
+                    <Route path="/admin/lead-analytics" element={<AdminRoute><LeadEmailAnalytics /></AdminRoute>} />
                     
                     <Route path="*" element={<NotFound />} />
                   </Routes>

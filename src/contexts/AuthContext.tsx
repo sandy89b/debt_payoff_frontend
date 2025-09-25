@@ -87,7 +87,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (twoFactorToken && twoFactorToken.trim()) {
         requestBody.twoFactorToken = twoFactorToken;
       }
-      console.log(import.meta.env.VITE_API_URL);
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/signin`, {
         method: 'POST',
         headers: {
@@ -296,13 +295,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const sendPhoneCode = async (phone: string): Promise<boolean> => {
     // Prevent duplicate calls
     if (isLoading) {
-      console.log('sendPhoneCode: Already loading, skipping duplicate call');
       return false;
     }
 
     try {
       setIsLoading(true);
-      console.log('sendPhoneCode: Sending request for phone:', phone);
       
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/send-phone-code`, {
         method: 'POST',
@@ -314,7 +311,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
 
       const data = await response.json();
-      console.log('sendPhoneCode: Response received:', data);
       return data.success;
     } catch (error) {
       console.error('sendPhoneCode: Error:', error);
@@ -410,13 +406,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const sendVerificationCode = async (method: 'email' | 'phone', emailOrPhone: string): Promise<boolean> => {
     // Prevent duplicate calls
     if (isLoading) {
-      console.log('sendVerificationCode: Already loading, skipping duplicate call');
       return false;
     }
 
     try {
       setIsLoading(true);
-      console.log('sendVerificationCode: Sending request for method:', method, 'contact:', emailOrPhone);
       
       if (method === 'email') {
         return await resendCode(emailOrPhone);

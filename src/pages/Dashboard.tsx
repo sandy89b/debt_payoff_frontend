@@ -69,7 +69,6 @@ const DashboardOverview: React.FC = () => {
       
       setDebts(debtsJson.data || []);
       // Store statistics for potential future use
-      console.log('Debt statistics:', statsJson.data);
       
       if (isRefresh) {
         toast({ title: 'Success', description: 'Dashboard data refreshed', variant: 'success' });
