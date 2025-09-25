@@ -171,20 +171,40 @@ const EmailAutomation: React.FC = () => {
     try {
       // Use the ngrok URL directly since environment variable might not be set
       const apiUrl = import.meta.env.VITE_API_URL || 'https://unpugnaciously-unmensurable-madison.ngrok-free.dev';
-      console.log('API URL:', apiUrl);
-      console.log('Full URL:', `${apiUrl}/api/email-automation/templates`);
-      console.log('Auth headers:', getAuthHeaders());
+      console.log('🔍 Loading templates from:', apiUrl);
+      console.log('🔍 Full URL:', `${apiUrl}/api/email-automation/templates`);
+      console.log('🔍 Auth headers:', getAuthHeaders());
       
       const response = await fetch(`${apiUrl}/api/email-automation/templates`, {
         headers: getAuthHeaders()
       });
+      
+      console.log('📡 Response status:', response.status);
+      console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()));
+      
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ HTTP Error Response:', errorText);
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       
+      // Check if response is HTML (ngrok error page)
+      const contentType = response.headers.get('content-type');
+      console.log('📄 Content-Type:', contentType);
+      
+      if (contentType && contentType.includes('text/html')) {
+        const htmlText = await response.text();
+        console.error('❌ NGROK ERROR - Received HTML instead of JSON:');
+        console.error('HTML Content:', htmlText.substring(0, 500));
+        throw new Error('🚨 NGROK TUNNEL ERROR: Received HTML response instead of JSON. Please restart ngrok tunnel.');
+      }
+      
       const data = await response.json();
+      console.log('✅ Templates data received:', data);
+      
       if (data.success) {
         setTemplates(data.data || []);
+        console.log(`✅ Successfully loaded ${data.data?.length || 0} templates`);
       } else {
         throw new Error(data.message || 'Failed to load templates');
       }
@@ -201,19 +221,39 @@ const EmailAutomation: React.FC = () => {
   const loadCampaigns = async () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'https://unpugnaciously-unmensurable-madison.ngrok-free.dev';
-      console.log('Loading campaigns from:', `${apiUrl}/api/email-automation/campaigns`);
-      console.log('Auth headers:', getAuthHeaders());
+      console.log('🔍 Loading campaigns from:', `${apiUrl}/api/email-automation/campaigns`);
+      console.log('🔍 Auth headers:', getAuthHeaders());
       
       const response = await fetch(`${apiUrl}/api/email-automation/campaigns`, {
         headers: getAuthHeaders()
       });
+      
+      console.log('📡 Campaigns response status:', response.status);
+      console.log('📡 Campaigns response headers:', Object.fromEntries(response.headers.entries()));
+      
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ HTTP Error Response for campaigns:', errorText);
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       
+      // Check if response is HTML (ngrok error page)
+      const contentType = response.headers.get('content-type');
+      console.log('📄 Campaigns Content-Type:', contentType);
+      
+      if (contentType && contentType.includes('text/html')) {
+        const htmlText = await response.text();
+        console.error('❌ NGROK ERROR - Received HTML instead of JSON for campaigns:');
+        console.error('HTML Content:', htmlText.substring(0, 500));
+        throw new Error('🚨 NGROK TUNNEL ERROR: Received HTML response instead of JSON. Please restart ngrok tunnel.');
+      }
+      
       const data = await response.json();
+      console.log('✅ Campaigns data received:', data);
+      
       if (data.success) {
         setCampaigns(data.data || []);
+        console.log(`✅ Successfully loaded ${data.data?.length || 0} campaigns`);
       } else {
         throw new Error(data.message || 'Failed to load campaigns');
       }
