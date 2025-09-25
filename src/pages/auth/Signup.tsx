@@ -205,35 +205,9 @@ export const Signup: React.FC = () => {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-      
-      // Use fetch to get the Google OAuth URL with proper headers
-      const response = await fetch(`${apiBase}/api/auth/google/url`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true'
-        }
-      });
-      
-      const data = await response.json();
-      
-      if (data.success && data.authUrl) {
-        // Redirect to the Google OAuth URL
-        window.location.href = data.authUrl;
-      } else {
-        throw new Error(data.message || 'Failed to get Google OAuth URL');
-      }
-    } catch (error) {
-      console.error('Google OAuth initiation failed:', error);
-      toast({
-        title: "Error",
-        description: "Failed to initiate Google sign-in. Please try again.",
-        variant: "destructive",
-      });
-    }
+  const handleGoogleSignIn = () => {
+    // Use direct redirect to avoid CORS issues
+    window.location.href = '/auth/google/start';
   };
 
   return (
