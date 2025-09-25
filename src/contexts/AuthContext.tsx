@@ -87,7 +87,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (twoFactorToken && twoFactorToken.trim()) {
         requestBody.twoFactorToken = twoFactorToken;
       }
-
+      console.log(import.meta.env.VITE_API_URL);
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/signin`, {
         method: 'POST',
         headers: {
