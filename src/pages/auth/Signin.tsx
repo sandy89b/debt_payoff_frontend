@@ -38,9 +38,9 @@ export const Signin: React.FC = () => {
     }
 
     try {
-      const delay = new Promise((res) => setTimeout(res, 3000));
+      // const delay = new Promise((res) => setTimeout(res, 3000));
       const signPromise = signIn(emailOrPhone, password, twoFactorToken as any);
-      const result = await Promise.all([delay, signPromise]).then(([, r]) => r);
+      const result = await Promise.all([signPromise]).then(([r]) => r);
       
       if ((result as any).twoFactorRequired) {
         setTwoFactorChallenge({ required: true, tempToken: (result as any).tempToken });
@@ -90,8 +90,7 @@ export const Signin: React.FC = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const delay = new Promise((res) => setTimeout(res, 3000));
-      await Promise.all([delay, signInWithGoogle()]);
+      await signInWithGoogle();
     } catch (error) {
       toast({
         title: "Error",
