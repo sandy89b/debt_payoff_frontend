@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+                                                                                                                                                                                                                                                                                                                                                                                                                                        import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -89,7 +89,7 @@ export const Signin: React.FC = () => {
   };
 
   const handleGoogleSignIn = () => {
-    // Use the correct API endpoint based on environment
+                                                                                                                                                                                              // Use the correct API endpoint based on environment
     const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001';
     window.location.href = `${apiBase}/api/auth/google/start`;
   };
