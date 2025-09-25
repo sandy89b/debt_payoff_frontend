@@ -119,7 +119,8 @@ const EmailAutomationSimple: React.FC = () => {
     const token = localStorage.getItem('auth_token');
     return {
       'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : ''
+      'Authorization': token ? `Bearer ${token}` : '',
+      'ngrok-skip-browser-warning': 'true'
     };
   };
 
