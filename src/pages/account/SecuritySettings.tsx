@@ -47,7 +47,8 @@ export const SecuritySettings: React.FC = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+          'ngrok-skip-browser-warning': 'true'
         },
         body: JSON.stringify({ currentPassword, newPassword })
       });
@@ -149,7 +150,7 @@ export const SecuritySettings: React.FC = () => {
                             setIs2faBusy(true);
                             const res = await api('/api/user/2fa/enable', {
                               method: 'POST',
-                              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` },
+                              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`, 'ngrok-skip-browser-warning': 'true' },
                               body: JSON.stringify({ token: otpCode })
                             });
                             const data = await res.json();
@@ -182,7 +183,7 @@ export const SecuritySettings: React.FC = () => {
                   setIs2faBusy(true);
                   const res = await api('/api/user/2fa/disable', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`, 'ngrok-skip-browser-warning': 'true' },
                     body: JSON.stringify({ password: currentPassword })
                   });
                   const data = await res.json();

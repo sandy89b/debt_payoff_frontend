@@ -183,7 +183,10 @@ export const Signin: React.FC = () => {
                       try {
                         const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/verify-2fa`, {
                           method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
+                          headers: { 
+                            'Content-Type': 'application/json',
+                            'ngrok-skip-browser-warning': 'true'
+                          },
                           body: JSON.stringify({ tempToken: twoFactorChallenge.tempToken, twoFactorToken })
                         });
                         const data = await response.json();

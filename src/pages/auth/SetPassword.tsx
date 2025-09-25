@@ -33,7 +33,10 @@ const SetPassword: React.FC = () => {
       setSubmitting(true);
       const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/set-password`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true'
+        },
         body: JSON.stringify({ token, password })
       });
       const data = await res.json().catch(() => ({}));

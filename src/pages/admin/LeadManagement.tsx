@@ -81,7 +81,8 @@ export const LeadManagement: React.FC = () => {
 
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/leads?${params}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+          'ngrok-skip-browser-warning': 'true'
         }
       });
 
@@ -108,7 +109,8 @@ export const LeadManagement: React.FC = () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/leads/statistics`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+          'ngrok-skip-browser-warning': 'true'
         }
       });
 
@@ -129,7 +131,8 @@ export const LeadManagement: React.FC = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+          'ngrok-skip-browser-warning': 'true'
         },
         body: JSON.stringify({ status: newStatus })
       });
@@ -177,6 +180,7 @@ export const LeadManagement: React.FC = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true',
           ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         },
         body: JSON.stringify(payload)
@@ -210,7 +214,8 @@ export const LeadManagement: React.FC = () => {
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/leads/${leadId}/convert`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+          'ngrok-skip-browser-warning': 'true'
         }
       });
 
