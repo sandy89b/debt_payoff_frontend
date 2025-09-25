@@ -124,7 +124,9 @@ export const EmailAutomationProvider: React.FC<EmailAutomationProviderProps> = (
     const token = localStorage.getItem('auth_token');
     return {
       'Content-Type': 'application/json',
-      ...(token && { 'Authorization': `Bearer ${token}` })
+      ...(token && { 'Authorization': `Bearer ${token}` }),
+      // Prevent ngrok browser warning HTML
+      'ngrok-skip-browser-warning': 'true'
     };
   };
 
