@@ -91,7 +91,7 @@ export const Signin: React.FC = () => {
   const handleGoogleSignIn = () => {
     const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001';
     // Navigate directly to backend redirect endpoint to avoid CORS/fetch timeouts
-    window.location.assign(`${apiBase}/api/auth/google/start`);
+    window.location.assign(`${apiBase}/api/auth/google/url`);
   };
 
   return (
