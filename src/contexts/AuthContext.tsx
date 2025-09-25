@@ -92,6 +92,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true'
         },
         body: JSON.stringify(requestBody),
       });
@@ -423,27 +424,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signInWithGoogle = async (): Promise<void> => {
     try {
       setIsLoading(true);
-      
-      // First, get the Google OAuth URL from the backend
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/google/url`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          // Prevent ngrok warning HTML (must be present even for GET)
-          'ngrok-skip-browser-warning': 'true'
-        },
-      });
-
-      const data = await response.json();
-      
-      if (data.success && data.authUrl) {
-        // Redirect to the Google OAuth URL
-        window.location.href = data.authUrl;
-      } else {
-        throw new Error(data.message || 'Failed to get Google OAuth URL');
-      }
-    } catch (error) {
-      // Google OAuth initiation failed
+      // Redirect directly to backend start endpoint to avoid CORS
+      const startUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/google/start`;
+      window.location.href = startUrl;
     } finally {
       setIsLoading(false);
     }
