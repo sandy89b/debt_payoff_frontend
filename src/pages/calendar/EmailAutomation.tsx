@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import ConnectionTest from '@/components/ConnectionTest';
 import { 
   Mail, 
   Send, 
@@ -119,8 +120,13 @@ const EmailAutomation: React.FC = () => {
     };
     
     const token = localStorage.getItem('auth_token');
+    console.log('Token from localStorage:', token ? 'Present' : 'Missing');
+    
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
+      console.log('Authorization header set');
+    } else {
+      console.warn('No auth token found in localStorage');
     }
     
     return headers;
@@ -163,9 +169,11 @@ const EmailAutomation: React.FC = () => {
 
   const loadTemplates = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      // Use the ngrok URL directly since environment variable might not be set
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://unpugnaciously-unmensurable-madison.ngrok-free.dev';
       console.log('API URL:', apiUrl);
       console.log('Full URL:', `${apiUrl}/api/email-automation/templates`);
+      console.log('Auth headers:', getAuthHeaders());
       
       const response = await fetch(`${apiUrl}/api/email-automation/templates`, {
         headers: getAuthHeaders()
@@ -192,8 +200,9 @@ const EmailAutomation: React.FC = () => {
 
   const loadCampaigns = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://unpugnaciously-unmensurable-madison.ngrok-free.dev';
       console.log('Loading campaigns from:', `${apiUrl}/api/email-automation/campaigns`);
+      console.log('Auth headers:', getAuthHeaders());
       
       const response = await fetch(`${apiUrl}/api/email-automation/campaigns`, {
         headers: getAuthHeaders()
@@ -450,6 +459,14 @@ const EmailAutomation: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-900">Email Automation</h1>
           <p className="text-gray-600">Manage email campaigns and lead nurturing sequences</p>
         </div>
+      </div>
+
+      {/* Connection Test Component */}
+      <div className="flex justify-center">
+        <ConnectionTest />
+      </div>
+
+      <div className="flex items-center justify-between">
         <div className="flex gap-2">
           <Button onClick={() => setActiveTab('templates')} variant="outline">
             <Mail className="h-4 w-4 mr-2" />
