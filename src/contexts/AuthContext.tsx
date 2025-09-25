@@ -429,6 +429,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          // Prevent ngrok warning HTML (must be present even for GET)
+          'ngrok-skip-browser-warning': 'true'
         },
       });
 
