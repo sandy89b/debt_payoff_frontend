@@ -43,6 +43,14 @@ export default defineConfig(({ mode }) => ({
       }
     }
   },
+  define: {
+    // Define environment variables for build time
+    'import.meta.env.VITE_API_URL': JSON.stringify(
+      mode === 'production' 
+        ? 'https://unpugnaciously-unmensurable-madison.ngrok-free.dev'
+        : 'http://localhost:3001'
+    )
+  },
   plugins: [
     react(),
     mode === 'development' &&
