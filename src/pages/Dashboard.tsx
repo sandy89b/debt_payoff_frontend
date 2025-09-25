@@ -30,7 +30,9 @@ function getAuthHeaders() {
   }
   return {
     'Content-Type': 'application/json',
-    ...(token && { 'Authorization': `Bearer ${token}` })
+    ...(token && { 'Authorization': `Bearer ${token}` }),
+    // Prevent ngrok browser warning page (which returns HTML and breaks JSON parsing)
+    'ngrok-skip-browser-warning': 'true'
   } as Record<string, string>;
 }
 
