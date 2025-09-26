@@ -8,10 +8,25 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { Mail, Send, BarChart3, Plus, Eye, Edit, Trash2, Save, X, Play, Pause, Calendar, Users, MoreHorizontal } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious, PaginationLink } from '@/components/ui/pagination';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+
+interface EmailAnalytics {
+  total_sends: number;
+  sent_count: number;
+  delivered_count: number;
+  opened_count: number;
+  clicked_count: number;
+  bounced_count: number;
+  open_rate: string;
+  click_rate: string;
+  bounce_rate: string;
+  avg_opens: number;
+  avg_clicks: number;
+}
 
 interface EmailTemplate {
   id: string;
@@ -39,9 +54,13 @@ interface EmailCampaign {
 
 const EmailAutomationSimple: React.FC = () => {
   const { toast } = useToast();
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
   const [loading, setLoading] = useState(false);
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
   const [campaigns, setCampaigns] = useState<EmailCampaign[]>([]);
+  const [analytics, setAnalytics] = useState<EmailAnalytics | null>(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'templates' | 'campaigns' | 'analytics'>('templates');
   const [editingTemplate, setEditingTemplate] = useState<EmailTemplate | null>(null);
   const [editingCampaign, setEditingCampaign] = useState<EmailCampaign | null>(null);
@@ -71,7 +90,10 @@ const EmailAutomationSimple: React.FC = () => {
   useEffect(() => {
     loadTemplates();
     loadCampaigns();
-  }, []);
+    if (isAdmin) {
+      loadAnalytics();
+    }
+  }, [isAdmin]);
 
   const loadTemplates = async () => {
     try {
@@ -93,6 +115,53 @@ const EmailAutomationSimple: React.FC = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadAnalytics = async () => {
+    try {
+      setAnalyticsLoading(true);
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/email-automation/analytics`, {
+        headers: getAuthHeaders()
+      });
+      const data = await response.json();
+      if (data.success) {
+        setAnalytics(data.data);
+      } else {
+        console.error('Failed to load analytics:', data.message);
+        // Set default analytics if failed
+        setAnalytics({
+          total_sends: 0,
+          sent_count: 0,
+          delivered_count: 0,
+          opened_count: 0,
+          clicked_count: 0,
+          bounced_count: 0,
+          open_rate: '0.0',
+          click_rate: '0.0',
+          bounce_rate: '0.0',
+          avg_opens: 0,
+          avg_clicks: 0
+        });
+      }
+    } catch (error) {
+      console.error('Error loading analytics:', error);
+      // Set default analytics on error
+      setAnalytics({
+        total_sends: 0,
+        sent_count: 0,
+        delivered_count: 0,
+        opened_count: 0,
+        clicked_count: 0,
+        bounced_count: 0,
+        open_rate: '0.0',
+        click_rate: '0.0',
+        bounce_rate: '0.0',
+        avg_opens: 0,
+        avg_clicks: 0
+      });
+    } finally {
+      setAnalyticsLoading(false);
     }
   };
 
@@ -383,7 +452,13 @@ const EmailAutomationSimple: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 mb-1">Total Sent</p>
-                <p className="text-2xl font-bold text-gray-900">0</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {!isAdmin ? '0' : analyticsLoading ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-400"></div>
+                  ) : (
+                    analytics?.total_sends || 0
+                  )}
+                </p>
               </div>
               <div className="p-3 bg-blue-50 rounded-full">
                 <Send className="h-6 w-6 text-blue-600" />
@@ -397,7 +472,13 @@ const EmailAutomationSimple: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 mb-1">Open Rate</p>
-                <p className="text-2xl font-bold text-gray-900">0.0%</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {!isAdmin ? '0.0%' : analyticsLoading ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-400"></div>
+                  ) : (
+                    `${analytics?.open_rate || '0.0'}%`
+                  )}
+                </p>
               </div>
               <div className="p-3 bg-green-50 rounded-full">
                 <Mail className="h-6 w-6 text-green-600" />
@@ -411,7 +492,13 @@ const EmailAutomationSimple: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 mb-1">Click Rate</p>
-                <p className="text-2xl font-bold text-gray-900">0.0%</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {!isAdmin ? '0.0%' : analyticsLoading ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-400"></div>
+                  ) : (
+                    `${analytics?.click_rate || '0.0'}%`
+                  )}
+                </p>
               </div>
               <div className="p-3 bg-purple-50 rounded-full">
                 <BarChart3 className="h-6 w-6 text-purple-600" />
@@ -425,7 +512,13 @@ const EmailAutomationSimple: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 mb-1">Bounce Rate</p>
-                <p className="text-2xl font-bold text-gray-900">0.0%</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {!isAdmin ? '0.0%' : analyticsLoading ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-400"></div>
+                  ) : (
+                    `${analytics?.bounce_rate || '0.0'}%`
+                  )}
+                </p>
               </div>
               <div className="p-3 bg-red-50 rounded-full">
                 <Mail className="h-6 w-6 text-red-600" />
@@ -767,24 +860,108 @@ const EmailAutomationSimple: React.FC = () => {
 
           {/* Analytics Tab */}
           {activeTab === 'analytics' && (
-            <div className="text-center py-8">
-              <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Email Analytics</h3>
-              <p className="text-gray-600 mb-4">Detailed analytics and reporting features coming soon.</p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-900">Open Rates</h4>
-                  <p className="text-2xl font-bold text-purple-600">0.0%</p>
+            <div className="space-y-6">
+              {!isAdmin ? (
+                <div className="text-center py-8">
+                  <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Analytics Access Restricted</h3>
+                  <p className="text-gray-600 mb-4">Email analytics are only available to admin users.</p>
+                  <p className="text-sm text-gray-500">Contact your administrator if you need access to email analytics.</p>
                 </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-900">Click Rates</h4>
-                  <p className="text-2xl font-bold text-blue-600">0.0%</p>
+              ) : analyticsLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  <span className="ml-2 text-gray-600">Loading analytics...</span>
                 </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-900">Conversion</h4>
-                  <p className="text-2xl font-bold text-green-600">0.0%</p>
-                </div>
-              </div>
+              ) : (
+                <>
+                  <div className="text-center">
+                    <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">Email Analytics</h3>
+                    <p className="text-gray-600 mb-6">Real-time email performance metrics from your campaigns</p>
+                  </div>
+                  
+                  {/* Detailed Analytics Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium text-gray-900 mb-2">Total Emails Sent</h4>
+                      <p className="text-3xl font-bold text-blue-600">{analytics?.total_sends || 0}</p>
+                      <p className="text-sm text-gray-600 mt-1">All time</p>
+                    </div>
+                    
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium text-gray-900 mb-2">Delivered</h4>
+                      <p className="text-3xl font-bold text-green-600">{analytics?.delivered_count || 0}</p>
+                      <p className="text-sm text-gray-600 mt-1">Successfully delivered</p>
+                    </div>
+                    
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium text-gray-900 mb-2">Opened</h4>
+                      <p className="text-3xl font-bold text-purple-600">{analytics?.opened_count || 0}</p>
+                      <p className="text-sm text-gray-600 mt-1">Times opened</p>
+                    </div>
+                    
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium text-gray-900 mb-2">Clicked</h4>
+                      <p className="text-3xl font-bold text-indigo-600">{analytics?.clicked_count || 0}</p>
+                      <p className="text-sm text-gray-600 mt-1">Times clicked</p>
+                    </div>
+                    
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium text-gray-900 mb-2">Bounced</h4>
+                      <p className="text-3xl font-bold text-red-600">{analytics?.bounced_count || 0}</p>
+                      <p className="text-sm text-gray-600 mt-1">Failed deliveries</p>
+                    </div>
+                    
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium text-gray-900 mb-2">Avg Opens per Email</h4>
+                      <p className="text-3xl font-bold text-orange-600">{analytics?.avg_opens?.toFixed(1) || '0.0'}</p>
+                      <p className="text-sm text-gray-600 mt-1">Average opens</p>
+                    </div>
+                  </div>
+                  
+                  {/* Performance Rates */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <div className="p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg border border-green-200">
+                      <h4 className="font-medium text-gray-900">Open Rate</h4>
+                      <p className="text-2xl font-bold text-green-600">{analytics?.open_rate || '0.0'}%</p>
+                      <p className="text-sm text-gray-600 mt-1">Emails opened</p>
+                    </div>
+                    <div className="p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border border-blue-200">
+                      <h4 className="font-medium text-gray-900">Click Rate</h4>
+                      <p className="text-2xl font-bold text-blue-600">{analytics?.click_rate || '0.0'}%</p>
+                      <p className="text-sm text-gray-600 mt-1">Links clicked</p>
+                    </div>
+                    <div className="p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-lg border border-red-200">
+                      <h4 className="font-medium text-gray-900">Bounce Rate</h4>
+                      <p className="text-2xl font-bold text-red-600">{analytics?.bounce_rate || '0.0'}%</p>
+                      <p className="text-sm text-gray-600 mt-1">Failed deliveries</p>
+                    </div>
+                  </div>
+                  
+                  {/* Refresh Button */}
+                  <div className="text-center pt-4">
+                    <Button 
+                      onClick={loadAnalytics} 
+                      variant="outline" 
+                      disabled={analyticsLoading}
+                      className="w-full sm:w-auto"
+                    >
+                      {analyticsLoading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400 mr-2"></div>
+                          Refreshing...
+                        </>
+                      ) : (
+                        <>
+                          <BarChart3 className="h-4 w-4 mr-2" />
+                          Refresh Analytics
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </CardContent>
