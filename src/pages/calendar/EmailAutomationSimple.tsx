@@ -136,8 +136,21 @@ const EmailAutomationSimple: React.FC = () => {
       const data = await response.json();
       console.log('Analytics response data:', data);
       if (data.success) {
-        setAnalytics(data.data);
-        console.log('Analytics loaded successfully:', data.data);
+        // Ensure all numeric fields are properly formatted
+        const formattedData = {
+          ...data.data,
+          avg_opens: parseFloat(data.data.avg_opens) || 0,
+          avg_clicks: parseFloat(data.data.avg_clicks) || 0,
+          total_sends: parseInt(data.data.total_sends) || 0,
+          sent_count: parseInt(data.data.sent_count) || 0,
+          delivered_count: parseInt(data.data.delivered_count) || 0,
+          opened_count: parseInt(data.data.opened_count) || 0,
+          clicked_count: parseInt(data.data.clicked_count) || 0,
+          bounced_count: parseInt(data.data.bounced_count) || 0
+        };
+        setAnalytics(formattedData);
+        console.log('Analytics loaded successfully:', formattedData);
+        console.log('avg_opens type:', typeof formattedData.avg_opens, 'value:', formattedData.avg_opens);
       } else {
         console.error('Failed to load analytics:', data.message);
         // Set default analytics if failed
@@ -931,7 +944,7 @@ const EmailAutomationSimple: React.FC = () => {
                     
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <h4 className="font-medium text-gray-900 mb-2">Avg Opens per Email</h4>
-                      <p className="text-3xl font-bold text-orange-600">{analytics?.avg_opens?.toFixed(1) || '0.0'}</p>
+                      <p className="text-3xl font-bold text-orange-600">{(analytics?.avg_opens || 0).toFixed(1)}</p>
                       <p className="text-sm text-gray-600 mt-1">Average opens</p>
                     </div>
                   </div>
