@@ -1,4 +1,4 @@
-                                                                                                                                                                                                                                                                                                                                                                                                                                        import React, { useState } from 'react';
+                                                                                                                                                                                                                                                                                                                                                                                                                                        import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,10 +20,19 @@ export const Signin: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { signIn, isLoading } = useAuth();
+  const { signIn, isLoading, loadRememberedCredentials } = useAuth();
 
   // Get the page user was trying to access before being redirected, default to dashboard
   const from = location.state?.from?.pathname || '/dashboard';
+
+  // Load remembered credentials on component mount
+  useEffect(() => {
+    const { isRemembered, rememberedEmail } = loadRememberedCredentials();
+    if (isRemembered && rememberedEmail) {
+      setEmailOrPhone(rememberedEmail);
+      setRememberMe(true);
+    }
+  }, [loadRememberedCredentials]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +48,7 @@ export const Signin: React.FC = () => {
 
     try {
       // const delay = new Promise((res) => setTimeout(res, 3000));
-      const signPromise = signIn(emailOrPhone, password, twoFactorToken as any);
+      const signPromise = signIn(emailOrPhone, password, twoFactorToken as any, rememberMe);
       const result = await Promise.all([signPromise]).then(([r]) => r);
       
       if ((result as any).twoFactorRequired) {

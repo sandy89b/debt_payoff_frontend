@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  signIn: (emailOrPhone: string, password: string, twoFactorToken?: string) => Promise<{ success: boolean; error?: string; errors?: Array<{field: string, message: string}> }>;
+  signIn: (emailOrPhone: string, password: string, twoFactorToken?: string, rememberMe?: boolean) => Promise<{ success: boolean; error?: string; errors?: Array<{field: string, message: string}> }>;
   signUp: (userData: SignUpData) => Promise<{ success: boolean; requiresVerification?: boolean; email?: string; user?: User | null; error?: string; errors?: Array<{field: string, message: string}> }>;
   verifyCode: (email: string, code: string) => Promise<boolean>;
   resendCode: (email: string) => Promise<boolean>;
@@ -18,6 +18,8 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<void>;
   signOut: () => void;
   refreshAuth: () => void;
+  loadRememberedCredentials: () => { isRemembered: boolean; rememberedEmail: string };
+  clearRememberedCredentials: () => void;
   isLoading: boolean;
 }
 
@@ -79,7 +81,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     refreshUserData(); // Add role data for existing admin users
   }, []);
 
-  const signIn = async (emailOrPhone: string, password: string, twoFactorToken?: string): Promise<{ success: boolean; error?: string; errors?: Array<{field: string, message: string}> }> => {
+  const signIn = async (emailOrPhone: string, password: string, twoFactorToken?: string, rememberMe?: boolean): Promise<{ success: boolean; error?: string; errors?: Array<{field: string, message: string}> }> => {
     try {
       setIsLoading(true);
       
@@ -87,6 +89,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (twoFactorToken && twoFactorToken.trim()) {
         requestBody.twoFactorToken = twoFactorToken;
       }
+      if (rememberMe !== undefined) {
+        requestBody.rememberMe = rememberMe;
+      }
+      
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/signin`, {
         method: 'POST',
         headers: {
@@ -101,6 +107,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (data.success && data.data?.user) {
         const userData = data.data.user;
         const token = data.data.token;
+        const isRemembered = data.data.rememberMe || false;
         
         // Ensure role is included in user data
         setUser(userData);
@@ -110,6 +117,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         localStorage.setItem('user_data', JSON.stringify(userData));
         if (token) {
           localStorage.setItem('auth_token', token);
+        }
+        
+        // Store remember me preference
+        if (isRemembered) {
+          localStorage.setItem('remember_me', 'true');
+          localStorage.setItem('remembered_email', emailOrPhone);
+        } else {
+          localStorage.removeItem('remember_me');
+          localStorage.removeItem('remembered_email');
         }
         
         return { success: true };
@@ -500,6 +516,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const loadRememberedCredentials = () => {
+    const isRemembered = localStorage.getItem('remember_me') === 'true';
+    const rememberedEmail = localStorage.getItem('remembered_email');
+    
+    return {
+      isRemembered,
+      rememberedEmail: rememberedEmail || ''
+    };
+  };
+
+  const clearRememberedCredentials = () => {
+    localStorage.removeItem('remember_me');
+    localStorage.removeItem('remembered_email');
+  };
+
   // Temporary function to refresh user data by re-signing in
   const refreshUserData = async () => {
     try {
@@ -539,6 +570,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signInWithGoogle,
     signOut,
     refreshAuth,
+    loadRememberedCredentials,
+    clearRememberedCredentials,
     isLoading,
   };
 
