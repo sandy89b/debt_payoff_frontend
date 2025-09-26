@@ -41,14 +41,26 @@ export const VerificationMethodModal: React.FC<VerificationMethodModalProps> = (
   email,
   phone
 }) => {
+  const [isProcessing, setIsProcessing] = React.useState(false);
+
   const handleSelectEmail = () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    console.log('VerificationMethodModal: Email selected');
     onSelectMethod('email');
     onClose();
+    // Reset processing state after a delay
+    setTimeout(() => setIsProcessing(false), 1000);
   };
 
   const handleSelectPhone = () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    console.log('VerificationMethodModal: Phone selected');
     onSelectMethod('phone');
     onClose();
+    // Reset processing state after a delay
+    setTimeout(() => setIsProcessing(false), 1000);
   };
 
   // Parse phone number to get country info
@@ -71,7 +83,7 @@ export const VerificationMethodModal: React.FC<VerificationMethodModalProps> = (
         <div className="space-y-3 mt-4">
           {/* Email Verification Option */}
           <Card 
-            className="cursor-pointer hover:shadow-md transition-shadow border-brand-gray/20 hover:border-brand-purple/50"
+            className={`cursor-pointer hover:shadow-md transition-shadow border-brand-gray/20 hover:border-brand-purple/50 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={handleSelectEmail}
           >
             <CardContent className="p-4">
@@ -94,7 +106,7 @@ export const VerificationMethodModal: React.FC<VerificationMethodModalProps> = (
 
           {/* Phone Verification Option */}
           <Card 
-            className="cursor-pointer hover:shadow-md transition-shadow border-brand-gray/20 hover:border-brand-purple/50"
+            className={`cursor-pointer hover:shadow-md transition-shadow border-brand-gray/20 hover:border-brand-purple/50 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={handleSelectPhone}
           >
             <CardContent className="p-4">

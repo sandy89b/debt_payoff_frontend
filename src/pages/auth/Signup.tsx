@@ -129,23 +129,33 @@ export const Signup: React.FC = () => {
 
   const handleSelectVerificationMethod = async (method: 'email' | 'phone') => {
     // Prevent duplicate calls
-    if (isLoading) {
+    if (isLoading || awaitingVerification) {
+      console.log('Preventing duplicate verification call - already loading or awaiting verification');
       return;
     }
 
+    console.log('Starting verification method selection:', method);
     setVerificationMethod(method);
     setAwaitingVerification(true);
     
     const contact = method === 'email' ? pendingEmail : pendingPhone;
-    if (!contact) return;
+    if (!contact) {
+      console.error('No contact information available for verification');
+      setAwaitingVerification(false);
+      return;
+    }
 
+    console.log('Sending verification code to:', contact);
     const success = await sendVerificationCode(method, contact);
     if (success) {
+      console.log('Verification code sent successfully');
       toast({
         title: `Verification code sent`,
         description: `We sent a 6-digit code to your ${method === 'email' ? 'email' : 'phone number'}.`
       });
     } else {
+      console.error('Failed to send verification code');
+      setAwaitingVerification(false);
       toast({
         title: 'Failed to send code',
         description: 'Please try again later.',

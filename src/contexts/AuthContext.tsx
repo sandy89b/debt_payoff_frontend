@@ -295,10 +295,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const sendPhoneCode = async (phone: string): Promise<boolean> => {
     // Prevent duplicate calls
     if (isLoading) {
+      console.log('sendPhoneCode: Already loading, preventing duplicate call');
       return false;
     }
 
     try {
+      console.log('sendPhoneCode: Starting SMS send for phone:', phone);
       setIsLoading(true);
       
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/send-phone-code`, {
@@ -311,6 +313,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
 
       const data = await response.json();
+      console.log('sendPhoneCode: Response received:', data);
       return data.success;
     } catch (error) {
       console.error('sendPhoneCode: Error:', error);

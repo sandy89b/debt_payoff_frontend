@@ -18,6 +18,7 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import OAuthSuccess from "./pages/auth/OAuthSuccess";
 import OAuthError from "./pages/auth/OAuthError";
 import SetPassword from "./pages/auth/SetPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 import EmailAutomationDashboard from "./pages/admin/EmailAutomationDashboard";
 import { PaymentCalendar } from "@/components/calendar/payment-calendar";
 import { GoalPlanning } from "@/components/calendar/goal-planning";
@@ -74,7 +75,7 @@ const App = () => {
                     <Route path="/auth/signin" element={<Signin />} />
                     <Route path="/auth/signup" element={<Signup />} />
                     <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-                    {/* Removed reset-password route: handled within ForgotPassword/SetPassword */}
+                    <Route path="/auth/reset-password" element={<ResetPassword />} />
                     <Route path="/set-password" element={<SetPassword />} />
                     <Route path="/auth/success" element={<OAuthSuccess />} />
                     <Route path="/auth/error" element={<OAuthError />} />
