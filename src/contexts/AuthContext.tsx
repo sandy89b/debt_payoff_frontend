@@ -18,7 +18,7 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<void>;
   signOut: () => void;
   refreshAuth: () => void;
-  loadRememberedCredentials: () => { isRemembered: boolean; rememberedEmail: string };
+  loadRememberedCredentials: () => { isRemembered: boolean; rememberedEmail: string; rememberedPassword: string };
   clearRememberedCredentials: () => void;
   isLoading: boolean;
 }
@@ -119,13 +119,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           localStorage.setItem('auth_token', token);
         }
         
-        // Store remember me preference
+        // Store remember me preference and credentials
         if (isRemembered) {
           localStorage.setItem('remember_me', 'true');
           localStorage.setItem('remembered_email', emailOrPhone);
+          // Store password securely (base64 encoded for basic obfuscation)
+          const encodedPassword = btoa(password);
+          localStorage.setItem('remembered_password', encodedPassword);
+          
+          // Also try to use browser's credential manager if available
+          if (navigator.credentials && navigator.credentials.store) {
+            try {
+              const credential = new (window as any).PasswordCredential({
+                id: emailOrPhone,
+                password: password,
+                name: userData.firstName || 'User'
+              });
+              navigator.credentials.store(credential);
+            } catch (error) {
+              console.log('Credential manager not available, using localStorage');
+            }
+          }
         } else {
           localStorage.removeItem('remember_me');
           localStorage.removeItem('remembered_email');
+          localStorage.removeItem('remembered_password');
         }
         
         return { success: true };
@@ -519,16 +537,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const loadRememberedCredentials = () => {
     const isRemembered = localStorage.getItem('remember_me') === 'true';
     const rememberedEmail = localStorage.getItem('remembered_email');
+    const rememberedPassword = localStorage.getItem('remembered_password');
     
     return {
       isRemembered,
-      rememberedEmail: rememberedEmail || ''
+      rememberedEmail: rememberedEmail || '',
+      rememberedPassword: rememberedPassword ? atob(rememberedPassword) : ''
     };
   };
 
   const clearRememberedCredentials = () => {
     localStorage.removeItem('remember_me');
     localStorage.removeItem('remembered_email');
+    localStorage.removeItem('remembered_password');
   };
 
   // Temporary function to refresh user data by re-signing in

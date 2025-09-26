@@ -20,16 +20,17 @@ export const Signin: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { signIn, isLoading, loadRememberedCredentials } = useAuth();
+  const { signIn, isLoading, loadRememberedCredentials, clearRememberedCredentials } = useAuth();
 
   // Get the page user was trying to access before being redirected, default to dashboard
   const from = location.state?.from?.pathname || '/dashboard';
 
   // Load remembered credentials on component mount
   useEffect(() => {
-    const { isRemembered, rememberedEmail } = loadRememberedCredentials();
+    const { isRemembered, rememberedEmail, rememberedPassword } = loadRememberedCredentials();
     if (isRemembered && rememberedEmail) {
       setEmailOrPhone(rememberedEmail);
+      setPassword(rememberedPassword);
       setRememberMe(true);
     }
   }, [loadRememberedCredentials]);
@@ -95,6 +96,14 @@ export const Signin: React.FC = () => {
 
   const handleForgotPassword = () => {
     navigate('/auth/forgot-password');
+  };
+
+  const handleRememberMeChange = (checked: boolean) => {
+    setRememberMe(checked);
+    // If user unchecks remember me, clear stored credentials
+    if (!checked) {
+      clearRememberedCredentials();
+    }
   };
 
   const handleGoogleSignIn = () => {
@@ -223,7 +232,7 @@ export const Signin: React.FC = () => {
                   <Checkbox
                     id="remember"
                     checked={rememberMe}
-                    onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                    onCheckedChange={(checked) => handleRememberMeChange(checked as boolean)}
                     className="border-brand-gray/20 data-[state=checked]:bg-brand-purple data-[state=checked]:border-brand-purple"
                   />
                   <Label 
