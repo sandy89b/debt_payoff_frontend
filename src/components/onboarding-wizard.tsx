@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Wizard, WizardStep, WizardNavigation } from '@/components/ui/wizard';
-import { Button } from '@/components/ui/button';
+import { PressButton as Button } from "@/components/ui/PressButton";
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 

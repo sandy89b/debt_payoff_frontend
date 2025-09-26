@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
+import { PressButton as Button } from "@/components/ui/PressButton";
 import { useToast } from '@/hooks/use-toast';
 
 const SetPassword: React.FC = () => {

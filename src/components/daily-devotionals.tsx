@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { PressButton as Button } from "@/components/ui/PressButton";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { 

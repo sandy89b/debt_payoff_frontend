@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Upload, Plus, FileText, Download, AlertCircle, CheckCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { PressButton as Button } from "@/components/ui/PressButton";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';

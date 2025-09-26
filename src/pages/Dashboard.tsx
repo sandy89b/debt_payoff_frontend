@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { PressButton as Button } from "@/components/ui/PressButton";
 import { useToast } from '@/hooks/use-toast';
 import { DollarSign, TrendingUp, CheckCircle2, Calendar, Percent, Goal, Bell, GraduationCap, BookOpen, Trophy, Users, Heart, HeartHandshake, LineChart, ShieldCheck, HelpingHand, Settings, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';

@@ -1,6 +1,6 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { PressButton as Button } from "@/components/ui/PressButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronLeft, ChevronRight, Check } from "lucide-react"
 

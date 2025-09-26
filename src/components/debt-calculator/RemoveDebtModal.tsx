@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { PressButton as Button } from "@/components/ui/PressButton";
 import { Trash2, AlertTriangle, DollarSign, Calendar } from 'lucide-react';
 import { EnhancedDebt } from './EnhancedDebtEntry';
 

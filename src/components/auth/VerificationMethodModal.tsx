@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { PressButton as Button } from "@/components/ui/PressButton";
 import { Card, CardContent } from '@/components/ui/card';
 import { Mail, Phone, Shield } from 'lucide-react';
 import { parsePhoneNumber, findCountryByDialCode } from '@/data/countryCodes';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { PressButton as Button } from "@/components/ui/PressButton";
 import { countryCodes, Country, getDefaultCountry } from '@/data/countryCodes';
 import ReactCountryFlag from 'react-country-flag';
 

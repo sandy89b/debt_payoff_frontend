@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { PressButton as Button } from "@/components/ui/PressButton";
 import { Phone, Mail, Globe, LogOut, User, Settings } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import { SidebarTrigger } from '@/components/ui/sidebar';
