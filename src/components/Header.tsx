@@ -1,6 +1,6 @@
 import React from 'react';
 import { PressButton as Button } from "@/components/ui/PressButton";
-import { Phone, Mail, Globe, LogOut, User, Settings } from 'lucide-react';
+import { Phone, Mail, Globe, LogOut, User, Settings, Crown } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -95,6 +95,10 @@ export const Header: React.FC = () => {
                   <DropdownMenuContent align="end" className="w-56">
                     <DropdownMenuLabel className="text-xs">Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => navigate('/upgrade')} className="cursor-pointer text-purple-600">
+                      <Crown className="h-4 w-4 mr-2" />
+                      Upgrade Plan
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => navigate('/account/settings')} className="cursor-pointer">
                       <Settings className="h-4 w-4 mr-2" />
                       User Settings

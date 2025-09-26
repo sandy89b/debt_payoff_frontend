@@ -45,6 +45,7 @@ import { GuestDebtCalculator } from "@/components/debt-calculator/GuestDebtCalcu
 import UserSettingsLayout from "@/pages/account/UserSettingsLayout";
 import AccountSettings from "@/pages/account/AccountSettings";
 import SecuritySettings from "@/pages/account/SecuritySettings";
+import { UpgradePage } from "@/pages/Upgrade";
 import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
@@ -82,6 +83,7 @@ const App = () => {
                     
                     {/* Protected Routes - Require Authentication */}
                     <Route path="/dashboard" element={<ProtectedRoute><DashboardOverview /></ProtectedRoute>} />
+                    <Route path="/upgrade" element={<ProtectedRoute><UpgradePage /></ProtectedRoute>} />
                     <Route path="/account" element={<ProtectedRoute><UserSettingsLayout /></ProtectedRoute>}>
                       <Route path="settings" element={<AccountSettings />} />
                       <Route path="security" element={<SecuritySettings />} />
