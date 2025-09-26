@@ -54,7 +54,7 @@ export const LeadEmailAnalytics: React.FC = () => {
 
   const loadAnalytics = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/leads/email-analytics?days=${dateRange}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/email-automation/analytics`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
           'ngrok-skip-browser-warning': 'true'
@@ -66,20 +66,43 @@ export const LeadEmailAnalytics: React.FC = () => {
       }
 
       const result = await response.json();
-      setAnalytics(result.data);
+      if (result.success && result.data) {
+        // Transform the data to match the expected interface
+        const transformedData = {
+          totalEmailsSent: result.data.total_sends || 0,
+          emailsDelivered: result.data.delivered_count || 0,
+          emailsOpened: result.data.opened_count || 0,
+          emailsClicked: result.data.clicked_count || 0,
+          emailsBounced: result.data.bounced_count || 0,
+          emailsFailed: 0, // Not available in current API
+          openRate: parseFloat(result.data.open_rate) || 0,
+          clickRate: parseFloat(result.data.click_rate) || 0,
+          bounceRate: parseFloat(result.data.bounce_rate) || 0,
+          conversionRate: 0 // Not available in current API
+        };
+        setAnalytics(transformedData);
+      }
     } catch (error) {
       console.error('Error loading analytics:', error);
+      // Set default analytics on error
+      setAnalytics({
+        totalEmailsSent: 0,
+        emailsDelivered: 0,
+        emailsOpened: 0,
+        emailsClicked: 0,
+        emailsBounced: 0,
+        emailsFailed: 0,
+        openRate: 0,
+        clickRate: 0,
+        bounceRate: 0,
+        conversionRate: 0
+      });
     }
   };
 
   const loadEmailLogs = async () => {
     try {
-      const params = new URLSearchParams({
-        days: dateRange,
-        ...(statusFilter !== 'all' && { status: statusFilter })
-      });
-
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/leads/email-logs?${params}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/email-automation/sends`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
           'ngrok-skip-browser-warning': 'true'
@@ -91,9 +114,22 @@ export const LeadEmailAnalytics: React.FC = () => {
       }
 
       const result = await response.json();
-      setEmailLogs(result.data);
+      if (result.success && result.data) {
+        // Transform the data to match the expected interface
+        const transformedLogs = result.data.map((log: any) => ({
+          id: log.id,
+          leadId: log.user_id || 0,
+          triggerEvent: log.campaign_id ? 'campaign_send' : 'manual_send',
+          emailAddress: log.recipient_email,
+          status: log.status,
+          sentAt: log.sent_at,
+          errorMessage: log.bounce_reason || null
+        }));
+        setEmailLogs(transformedLogs);
+      }
     } catch (error) {
       console.error('Error loading email logs:', error);
+      setEmailLogs([]);
     } finally {
       setIsLoading(false);
     }
@@ -101,7 +137,8 @@ export const LeadEmailAnalytics: React.FC = () => {
 
   const loadLeadStats = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/leads/lead-email-stats?days=${dateRange}`, {
+      // For now, we'll use the email sends data to create lead stats
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/email-automation/sends`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
           'ngrok-skip-browser-warning': 'true'
@@ -113,9 +150,35 @@ export const LeadEmailAnalytics: React.FC = () => {
       }
 
       const result = await response.json();
-      setLeadStats(result.data);
+      if (result.success && result.data) {
+        // Group by email address to create lead stats
+        const emailGroups = result.data.reduce((acc: any, log: any) => {
+          const email = log.recipient_email;
+          if (!acc[email]) {
+            acc[email] = {
+              leadId: log.user_id || 0,
+              leadName: email.split('@')[0], // Use email prefix as name
+              leadEmail: email,
+              totalEmailsSent: 0,
+              lastEmailSent: log.sent_at,
+              lastEmailStatus: log.status,
+              conversionStatus: 'active'
+            };
+          }
+          acc[email].totalEmailsSent++;
+          if (new Date(log.sent_at) > new Date(acc[email].lastEmailSent)) {
+            acc[email].lastEmailSent = log.sent_at;
+            acc[email].lastEmailStatus = log.status;
+          }
+          return acc;
+        }, {});
+
+        const transformedStats = Object.values(emailGroups);
+        setLeadStats(transformedStats);
+      }
     } catch (error) {
       console.error('Error loading lead stats:', error);
+      setLeadStats([]);
     }
   };
 
@@ -224,7 +287,7 @@ export const LeadEmailAnalytics: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Open Rate</p>
-                  <p className="text-2xl font-bold text-green-600">{analytics.openRate.toFixed(1)}%</p>
+                  <p className="text-2xl font-bold text-green-600">{(analytics.openRate || 0).toFixed(1)}%</p>
                 </div>
                 <TrendingUp className="h-8 w-8 text-green-600" />
               </div>
@@ -236,7 +299,7 @@ export const LeadEmailAnalytics: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Click Rate</p>
-                  <p className="text-2xl font-bold text-purple-600">{analytics.clickRate.toFixed(1)}%</p>
+                  <p className="text-2xl font-bold text-purple-600">{(analytics.clickRate || 0).toFixed(1)}%</p>
                 </div>
                 <BarChart3 className="h-8 w-8 text-purple-600" />
               </div>
@@ -248,7 +311,7 @@ export const LeadEmailAnalytics: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Conversion Rate</p>
-                  <p className="text-2xl font-bold text-orange-600">{analytics.conversionRate.toFixed(1)}%</p>
+                  <p className="text-2xl font-bold text-orange-600">{(analytics.conversionRate || 0).toFixed(1)}%</p>
                 </div>
                 <CheckCircle className="h-8 w-8 text-orange-600" />
               </div>

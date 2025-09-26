@@ -95,6 +95,13 @@ const EmailAutomationSimple: React.FC = () => {
     }
   }, [isAdmin]);
 
+  // Debug analytics tab activation
+  useEffect(() => {
+    if (activeTab === 'analytics') {
+      console.log('Analytics tab activated, isAdmin:', isAdmin, 'analytics:', analytics, 'analyticsLoading:', analyticsLoading);
+    }
+  }, [activeTab, isAdmin, analytics, analyticsLoading]);
+
   const loadTemplates = async () => {
     try {
       setLoading(true);
@@ -120,13 +127,17 @@ const EmailAutomationSimple: React.FC = () => {
 
   const loadAnalytics = async () => {
     try {
+      console.log('Loading analytics...');
       setAnalyticsLoading(true);
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/email-automation/analytics`, {
         headers: getAuthHeaders()
       });
+      console.log('Analytics response status:', response.status);
       const data = await response.json();
+      console.log('Analytics response data:', data);
       if (data.success) {
         setAnalytics(data.data);
+        console.log('Analytics loaded successfully:', data.data);
       } else {
         console.error('Failed to load analytics:', data.message);
         // Set default analytics if failed
@@ -551,7 +562,12 @@ const EmailAutomationSimple: React.FC = () => {
           Campaigns ({campaigns.length})
         </button>
         <button
-          onClick={() => setActiveTab('analytics')}
+          onClick={() => {
+            setActiveTab('analytics');
+            if (isAdmin && !analytics) {
+              loadAnalytics();
+            }
+          }}
           className={`px-3 sm:px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
             activeTab === 'analytics'
               ? 'bg-white text-purple-600 shadow-sm'
@@ -873,7 +889,7 @@ const EmailAutomationSimple: React.FC = () => {
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                   <span className="ml-2 text-gray-600">Loading analytics...</span>
                 </div>
-              ) : (
+              ) : analytics ? (
                 <>
                   <div className="text-center">
                     <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -961,6 +977,25 @@ const EmailAutomationSimple: React.FC = () => {
                     </Button>
                   </div>
                 </>
+              ) : (
+                <div className="text-center py-8">
+                  <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No Analytics Data</h3>
+                  <p className="text-gray-600 mb-4">Analytics data is not available. Click the button below to load analytics.</p>
+                  <Button onClick={loadAnalytics} disabled={analyticsLoading}>
+                    {analyticsLoading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Loading...
+                      </>
+                    ) : (
+                      <>
+                        <BarChart3 className="h-4 w-4 mr-2" />
+                        Load Analytics
+                      </>
+                    )}
+                  </Button>
+                </div>
               )}
             </div>
           )}
