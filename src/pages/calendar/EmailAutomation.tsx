@@ -10,7 +10,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import ConnectionTest from '@/components/ConnectionTest';
 import { 
   Mail, 
   Send, 
@@ -488,10 +487,7 @@ const EmailAutomation: React.FC = () => {
         </div>
       </div>
 
-      {/* Connection Test Component */}
-      <div className="flex justify-center">
-        <ConnectionTest />
-      </div>
+
 
       <div className="flex items-center justify-between">
         <div className="flex gap-2">

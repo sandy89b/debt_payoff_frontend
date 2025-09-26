@@ -254,10 +254,17 @@ export const Signin: React.FC = () => {
               {/* Sign In Button */}
               <Button
                 type="submit"
-                className="w-full bg-gradient-hero hover:opacity-90 text-white font-semibold py-2.5"
+                className="w-full bg-gradient-hero hover:opacity-90 text-white font-semibold py-2.5 transition-all duration-200 active:scale-95"
                 disabled={isLoading}
               >
-                {isLoading ? "Signing in..." : "Sign In"}
+                {isLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                    Signing in...
+                  </>
+                ) : (
+                  'Sign In'
+                )}
               </Button>
             </form>
 

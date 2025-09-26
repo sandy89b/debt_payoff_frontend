@@ -412,10 +412,17 @@ export const Signup: React.FC = () => {
               {/* Sign Up Button */}
               <Button
                 type="submit"
-                className="w-full bg-gradient-hero hover:opacity-90 text-white font-semibold py-2.5"
+                className="w-full bg-gradient-hero hover:opacity-90 text-white font-semibold py-2.5 transition-all duration-200 active:scale-95"
                 disabled={isLoading}
               >
-                {isLoading ? "Creating Account..." : "Create Account"}
+                {isLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                    Creating Account...
+                  </>
+                ) : (
+                  'Create Account'
+                )}
               </Button>
             </form>
             ) : (
@@ -439,7 +446,7 @@ export const Signup: React.FC = () => {
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <Button type="submit" className="flex-1 bg-gradient-hero text-white">Verify</Button>
+                  <Button type="submit" className="flex-1 bg-gradient-hero text-white transition-all duration-200 active:scale-95">Verify</Button>
                   <Button type="button" variant="outline" onClick={handleResend}>Resend</Button>
                 </div>
               </form>

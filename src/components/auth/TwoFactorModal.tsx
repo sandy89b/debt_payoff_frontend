@@ -53,8 +53,17 @@ export const TwoFactorModal: React.FC<TwoFactorModalProps> = ({ isOpen, tempToke
           <Input id="twofa" inputMode="numeric" maxLength={6} value={code} onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))} className="tracking-widest text-center text-lg" placeholder="______" />
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={submitting}>Cancel</Button>
-          <Button onClick={handleVerify} disabled={submitting}>{submitting ? 'Verifying…' : 'Verify'}</Button>
+          <Button variant="outline" onClick={onClose} disabled={submitting} className="transition-all duration-200 hover:opacity-90 active:scale-95">Cancel</Button>
+          <Button onClick={handleVerify} disabled={submitting} className="transition-all duration-200 active:scale-95">
+            {submitting ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                Verifying…
+              </>
+            ) : (
+              'Verify'
+            )}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
