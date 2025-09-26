@@ -230,217 +230,253 @@ export const LeadEmailAnalytics: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-primary">Lead Email Analytics</h1>
-          <p className="text-muted-foreground">Track email performance and lead engagement</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      <div className="container mx-auto px-4 py-8 space-y-8">
+        {/* Enhanced Header */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center animate-float">
+              <BarChart3 className="h-8 w-8 text-white" />
+            </div>
+          </div>
+          <h1 className="text-4xl font-bold gradient-text-animated mb-4">
+            Lead Email Analytics
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Track email performance and lead engagement with comprehensive analytics
+          </p>
         </div>
-        
-        <div className="flex gap-4">
-          <Select value={dateRange} onValueChange={setDateRange}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="7">Last 7 days</SelectItem>
-              <SelectItem value="30">Last 30 days</SelectItem>
-              <SelectItem value="90">Last 90 days</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="sent">Sent</SelectItem>
-              <SelectItem value="delivered">Delivered</SelectItem>
-              <SelectItem value="opened">Opened</SelectItem>
-              <SelectItem value="clicked">Clicked</SelectItem>
-              <SelectItem value="bounced">Bounced</SelectItem>
-              <SelectItem value="failed">Failed</SelectItem>
-            </SelectContent>
-          </Select>
+
+        {/* Enhanced Controls */}
+        <div className="flex justify-center mb-8">
+          <div className="flex gap-4">
+            <Select value={dateRange} onValueChange={setDateRange}>
+              <SelectTrigger className="w-48 text-lg py-4 border-2 border-purple-200 dark:border-purple-800/30 rounded-xl focus:border-purple-400 dark:focus:border-purple-600 bg-white dark:bg-slate-800">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="7">Last 7 days</SelectItem>
+                <SelectItem value="30">Last 30 days</SelectItem>
+                <SelectItem value="90">Last 90 days</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-48 text-lg py-4 border-2 border-purple-200 dark:border-purple-800/30 rounded-xl focus:border-purple-400 dark:focus:border-purple-600 bg-white dark:bg-slate-800">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="sent">Sent</SelectItem>
+                <SelectItem value="delivered">Delivered</SelectItem>
+                <SelectItem value="opened">Opened</SelectItem>
+                <SelectItem value="clicked">Clicked</SelectItem>
+                <SelectItem value="bounced">Bounced</SelectItem>
+                <SelectItem value="failed">Failed</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
+
+        {/* Enhanced Analytics Cards */}
+        {analytics && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-6 rounded-3xl shadow-lg card-hover">
+              <CardContent className="p-0">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">Total Emails</p>
+                    <p className="text-3xl font-bold text-blue-800 dark:text-blue-200">{analytics.totalEmailsSent}</p>
+                  </div>
+                  <div className="p-3 bg-blue-500 rounded-2xl">
+                    <Mail className="h-8 w-8 text-white" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-6 rounded-3xl shadow-lg card-hover">
+              <CardContent className="p-0">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-green-700 dark:text-green-300 mb-2">Open Rate</p>
+                    <p className="text-3xl font-bold text-green-800 dark:text-green-200">{(analytics.openRate || 0).toFixed(1)}%</p>
+                  </div>
+                  <div className="p-3 bg-green-500 rounded-2xl">
+                    <TrendingUp className="h-8 w-8 text-white" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 p-6 rounded-3xl shadow-lg card-hover">
+              <CardContent className="p-0">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-purple-700 dark:text-purple-300 mb-2">Click Rate</p>
+                    <p className="text-3xl font-bold text-purple-800 dark:text-purple-200">{(analytics.clickRate || 0).toFixed(1)}%</p>
+                  </div>
+                  <div className="p-3 bg-purple-500 rounded-2xl">
+                    <BarChart3 className="h-8 w-8 text-white" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 p-6 rounded-3xl shadow-lg card-hover">
+              <CardContent className="p-0">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-orange-700 dark:text-orange-300 mb-2">Conversion Rate</p>
+                    <p className="text-3xl font-bold text-orange-800 dark:text-orange-200">{(analytics.conversionRate || 0).toFixed(1)}%</p>
+                  </div>
+                  <div className="p-3 bg-orange-500 rounded-2xl">
+                    <CheckCircle className="h-8 w-8 text-white" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Enhanced Email Logs Table */}
+        <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80">
+          <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6">
+            <CardTitle className="flex items-center gap-3 text-xl">
+              <div className="p-2 bg-white/20 rounded-xl">
+                <Mail className="h-5 w-5" />
+              </div>
+              Recent Email Activity
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 dark:bg-gray-800/50">
+                  <tr>
+                    <th className="text-left p-6 font-semibold text-gray-700 dark:text-gray-300">Lead</th>
+                    <th className="text-left p-6 font-semibold text-gray-700 dark:text-gray-300">Trigger Event</th>
+                    <th className="text-left p-6 font-semibold text-gray-700 dark:text-gray-300">Status</th>
+                    <th className="text-left p-6 font-semibold text-gray-700 dark:text-gray-300">Sent At</th>
+                    <th className="text-left p-6 font-semibold text-gray-700 dark:text-gray-300">Error</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {emailLogs.map((log) => (
+                    <tr key={log.id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                      <td className="p-6">
+                        <div>
+                          <p className="font-semibold text-gray-800 dark:text-gray-200">{log.emailAddress}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">Lead #{log.leadId}</p>
+                        </div>
+                      </td>
+                      <td className="p-6">
+                        <Badge variant="outline" className="border-purple-300 text-purple-600 px-3 py-1">
+                          {log.triggerEvent.replace('_', ' ')}
+                        </Badge>
+                      </td>
+                      <td className="p-6">
+                        <Badge className={`${getStatusColor(log.status)} px-3 py-1 text-sm font-semibold`}>
+                          <span className="flex items-center gap-1">
+                            {getStatusIcon(log.status)}
+                            {log.status}
+                          </span>
+                        </Badge>
+                      </td>
+                      <td className="p-6">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-purple-500" />
+                          <span className="text-sm text-gray-700 dark:text-gray-300">{formatDate(log.sentAt)}</span>
+                        </div>
+                      </td>
+                      <td className="p-6">
+                        {log.errorMessage && (
+                          <p className="text-sm text-red-600 dark:text-red-400">{log.errorMessage}</p>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {emailLogs.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gradient-to-r from-gray-400 to-gray-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Mail className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-2">No email activity found</h3>
+                <p className="text-gray-500 dark:text-gray-500">No email logs match your current criteria.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Enhanced Lead Email Stats */}
+        <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80">
+          <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6">
+            <CardTitle className="flex items-center gap-3 text-xl">
+              <div className="p-2 bg-white/20 rounded-xl">
+                <Users className="h-5 w-5" />
+              </div>
+              Lead Email Performance
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 dark:bg-gray-800/50">
+                  <tr>
+                    <th className="text-left p-6 font-semibold text-gray-700 dark:text-gray-300">Lead</th>
+                    <th className="text-left p-6 font-semibold text-gray-700 dark:text-gray-300">Emails Sent</th>
+                    <th className="text-left p-6 font-semibold text-gray-700 dark:text-gray-300">Last Email</th>
+                    <th className="text-left p-6 font-semibold text-gray-700 dark:text-gray-300">Last Status</th>
+                    <th className="text-left p-6 font-semibold text-gray-700 dark:text-gray-300">Conversion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {leadStats.map((lead) => (
+                    <tr key={lead.leadId} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                      <td className="p-6">
+                        <div>
+                          <p className="font-semibold text-gray-800 dark:text-gray-200">{lead.leadName}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{lead.leadEmail}</p>
+                        </div>
+                      </td>
+                      <td className="p-6">
+                        <span className="text-2xl font-bold text-gray-800 dark:text-gray-200">{lead.totalEmailsSent}</span>
+                      </td>
+                      <td className="p-6">
+                        <span className="text-sm text-gray-700 dark:text-gray-300">{formatDate(lead.lastEmailSent)}</span>
+                      </td>
+                      <td className="p-6">
+                        <Badge className={`${getStatusColor(lead.lastEmailStatus)} px-3 py-1 text-sm font-semibold`}>
+                          {lead.lastEmailStatus}
+                        </Badge>
+                      </td>
+                      <td className="p-6">
+                        <Badge className={lead.conversionStatus === 'converted' ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300 px-3 py-1 text-sm font-semibold' : 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300 px-3 py-1 text-sm font-semibold'}>
+                          {lead.conversionStatus}
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {leadStats.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gradient-to-r from-gray-400 to-gray-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Users className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-2">No lead email stats found</h3>
+                <p className="text-gray-500 dark:text-gray-500">No lead email performance data available.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
-
-      {/* Analytics Cards */}
-      {analytics && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total Emails</p>
-                  <p className="text-2xl font-bold">{analytics.totalEmailsSent}</p>
-                </div>
-                <Mail className="h-8 w-8 text-blue-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Open Rate</p>
-                  <p className="text-2xl font-bold text-green-600">{(analytics.openRate || 0).toFixed(1)}%</p>
-                </div>
-                <TrendingUp className="h-8 w-8 text-green-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Click Rate</p>
-                  <p className="text-2xl font-bold text-purple-600">{(analytics.clickRate || 0).toFixed(1)}%</p>
-                </div>
-                <BarChart3 className="h-8 w-8 text-purple-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Conversion Rate</p>
-                  <p className="text-2xl font-bold text-orange-600">{(analytics.conversionRate || 0).toFixed(1)}%</p>
-                </div>
-                <CheckCircle className="h-8 w-8 text-orange-600" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {/* Email Logs Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Email Activity</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left p-4">Lead</th>
-                  <th className="text-left p-4">Trigger Event</th>
-                  <th className="text-left p-4">Status</th>
-                  <th className="text-left p-4">Sent At</th>
-                  <th className="text-left p-4">Error</th>
-                </tr>
-              </thead>
-              <tbody>
-                {emailLogs.map((log) => (
-                  <tr key={log.id} className="border-b hover:bg-gray-50">
-                    <td className="p-4">
-                      <div>
-                        <p className="font-medium">{log.emailAddress}</p>
-                        <p className="text-sm text-muted-foreground">Lead #{log.leadId}</p>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <Badge variant="outline">
-                        {log.triggerEvent.replace('_', ' ')}
-                      </Badge>
-                    </td>
-                    <td className="p-4">
-                      <Badge className={getStatusColor(log.status)}>
-                        <span className="flex items-center gap-1">
-                          {getStatusIcon(log.status)}
-                          {log.status}
-                        </span>
-                      </Badge>
-                    </td>
-                    <td className="p-4">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm">{formatDate(log.sentAt)}</span>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      {log.errorMessage && (
-                        <p className="text-sm text-red-600">{log.errorMessage}</p>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {emailLogs.length === 0 && (
-            <div className="text-center py-8">
-              <Mail className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-muted-foreground">No email activity found</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Lead Email Stats */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Lead Email Performance</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left p-4">Lead</th>
-                  <th className="text-left p-4">Emails Sent</th>
-                  <th className="text-left p-4">Last Email</th>
-                  <th className="text-left p-4">Last Status</th>
-                  <th className="text-left p-4">Conversion</th>
-                </tr>
-              </thead>
-              <tbody>
-                {leadStats.map((lead) => (
-                  <tr key={lead.leadId} className="border-b hover:bg-gray-50">
-                    <td className="p-4">
-                      <div>
-                        <p className="font-medium">{lead.leadName}</p>
-                        <p className="text-sm text-muted-foreground">{lead.leadEmail}</p>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <span className="text-lg font-bold">{lead.totalEmailsSent}</span>
-                    </td>
-                    <td className="p-4">
-                      <span className="text-sm">{formatDate(lead.lastEmailSent)}</span>
-                    </td>
-                    <td className="p-4">
-                      <Badge className={getStatusColor(lead.lastEmailStatus)}>
-                        {lead.lastEmailStatus}
-                      </Badge>
-                    </td>
-                    <td className="p-4">
-                      <Badge className={lead.conversionStatus === 'converted' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
-                        {lead.conversionStatus}
-                      </Badge>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {leadStats.length === 0 && (
-            <div className="text-center py-8">
-              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-muted-foreground">No lead email stats found</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
     </div>
   );
 };

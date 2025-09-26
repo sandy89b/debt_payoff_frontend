@@ -457,173 +457,210 @@ const EmailAutomationSimple: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 space-y-6 sm:space-y-8 max-w-full overflow-hidden">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
-        <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Email Automation</h1>
-          <p className="text-sm sm:text-base text-gray-600">Manage email campaigns and lead nurturing sequences</p>
-        </div>
-        <Button onClick={handleTest} className="w-full sm:w-auto">
-          <Plus className="h-4 w-4 mr-2" />
-          Test Button
-        </Button>
-      </div>
-
-      {/* Simple Analytics Overview */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
-        <Card className="border-0 shadow-sm bg-white">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">Total Sent</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {!isAdmin ? '0' : analyticsLoading ? (
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-400"></div>
-                  ) : (
-                    analytics?.total_sends || 0
-                  )}
-                </p>
-              </div>
-              <div className="p-3 bg-blue-50 rounded-full">
-                <Send className="h-6 w-6 text-blue-600" />
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      <div className="container mx-auto px-4 py-8 space-y-8">
+        {/* Enhanced Header */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center animate-float">
+              <Mail className="h-8 w-8 text-white" />
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-sm bg-white">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">Open Rate</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {!isAdmin ? '0.0%' : analyticsLoading ? (
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-400"></div>
-                  ) : (
-                    `${analytics?.open_rate || '0.0'}%`
-                  )}
-                </p>
-              </div>
-              <div className="p-3 bg-green-50 rounded-full">
-                <Mail className="h-6 w-6 text-green-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-sm bg-white">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">Click Rate</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {!isAdmin ? '0.0%' : analyticsLoading ? (
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-400"></div>
-                  ) : (
-                    `${analytics?.click_rate || '0.0'}%`
-                  )}
-                </p>
-              </div>
-              <div className="p-3 bg-purple-50 rounded-full">
-                <BarChart3 className="h-6 w-6 text-purple-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-sm bg-white">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">Bounce Rate</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {!isAdmin ? '0.0%' : analyticsLoading ? (
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-400"></div>
-                  ) : (
-                    `${analytics?.bounce_rate || '0.0'}%`
-                  )}
-                </p>
-              </div>
-              <div className="p-3 bg-red-50 rounded-full">
-                <Mail className="h-6 w-6 text-red-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Tab Navigation */}
-      <div className="flex overflow-x-auto gap-2 bg-gray-100 p-1 rounded-lg -mx-3 sm:mx-0 px-3 sm:px-1">
-        <button
-          onClick={() => setActiveTab('templates')}
-          className={`px-3 sm:px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
-            activeTab === 'templates'
-              ? 'bg-white text-purple-600 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          Templates ({templates.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('campaigns')}
-          className={`px-3 sm:px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
-            activeTab === 'campaigns'
-              ? 'bg-white text-purple-600 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          Campaigns ({campaigns.length})
-        </button>
-        <button
-          onClick={() => {
-            setActiveTab('analytics');
-            if (isAdmin && !analytics) {
-              loadAnalytics();
-            }
-          }}
-          className={`px-3 sm:px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
-            activeTab === 'analytics'
-              ? 'bg-white text-purple-600 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          Analytics
-        </button>
-      </div>
-
-      {/* Main Content Area */}
-      <Card className="border-0 shadow-sm bg-white">
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <CardTitle className="text-lg sm:text-xl">
-              {activeTab === 'templates' && 'Email Templates'}
-              {activeTab === 'campaigns' && 'Email Campaigns'}
-              {activeTab === 'analytics' && 'Email Analytics'}
-            </CardTitle>
-            {activeTab === 'templates' && (
-              <Button onClick={() => setCreateOpen(true)} className="w-full sm:w-auto">
-                <Plus className="h-4 w-4 mr-2" />
-                Create Template
-              </Button>
-            )}
-            {activeTab === 'campaigns' && (
-              <Button className="w-full sm:w-auto" onClick={() => setEditingCampaign({
-                id: '',
-                name: '',
-                description: '',
-                template_id: '',
-                trigger_event: 'lead_captured',
-                is_active: true,
-                created_at: '',
-                updated_at: ''
-              })}>
-                <Plus className="h-4 w-4 mr-2" />
-                Create Campaign
-              </Button>
-            )}
           </div>
-        </CardHeader>
-        <CardContent>
+          <h1 className="text-4xl font-bold gradient-text-animated mb-4">
+            Email Automation
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Manage email campaigns and lead nurturing sequences with powerful automation tools
+          </p>
+        </div>
+
+      
+
+        {/* Enhanced Analytics Overview */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-6 rounded-3xl shadow-lg card-hover">
+            <CardContent className="p-0">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">Total Sent</p>
+                  <p className="text-3xl font-bold text-blue-800 dark:text-blue-200">
+                    {!isAdmin ? '0' : analyticsLoading ? (
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-400"></div>
+                    ) : (
+                      analytics?.total_sends || 0
+                    )}
+                  </p>
+                </div>
+                <div className="p-3 bg-blue-500 rounded-2xl">
+                  <Send className="h-8 w-8 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-6 rounded-3xl shadow-lg card-hover">
+            <CardContent className="p-0">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-green-700 dark:text-green-300 mb-2">Open Rate</p>
+                  <p className="text-3xl font-bold text-green-800 dark:text-green-200">
+                    {!isAdmin ? '0.0%' : analyticsLoading ? (
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-400"></div>
+                    ) : (
+                      `${analytics?.open_rate || '0.0'}%`
+                    )}
+                  </p>
+                </div>
+                <div className="p-3 bg-green-500 rounded-2xl">
+                  <Mail className="h-8 w-8 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 p-6 rounded-3xl shadow-lg card-hover">
+            <CardContent className="p-0">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-purple-700 dark:text-purple-300 mb-2">Click Rate</p>
+                  <p className="text-3xl font-bold text-purple-800 dark:text-purple-200">
+                    {!isAdmin ? '0.0%' : analyticsLoading ? (
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-400"></div>
+                    ) : (
+                      `${analytics?.click_rate || '0.0'}%`
+                    )}
+                  </p>
+                </div>
+                <div className="p-3 bg-purple-500 rounded-2xl">
+                  <BarChart3 className="h-8 w-8 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 p-6 rounded-3xl shadow-lg card-hover">
+            <CardContent className="p-0">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-red-700 dark:text-red-300 mb-2">Bounce Rate</p>
+                  <p className="text-3xl font-bold text-red-800 dark:text-red-200">
+                    {!isAdmin ? '0.0%' : analyticsLoading ? (
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-400"></div>
+                    ) : (
+                      `${analytics?.bounce_rate || '0.0'}%`
+                    )}
+                  </p>
+                </div>
+                <div className="p-3 bg-red-500 rounded-2xl">
+                  <Mail className="h-8 w-8 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Enhanced Tab Navigation */}
+        <div className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80">
+          <nav className="flex">
+            <button
+              onClick={() => setActiveTab('templates')}
+              className={`flex-1 py-4 px-6 font-semibold text-lg transition-all duration-300 ${
+                activeTab === 'templates'
+                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
+                  : 'text-gray-600 hover:text-purple-600 hover:bg-purple-50 dark:text-gray-300 dark:hover:text-purple-400 dark:hover:bg-purple-900/20'
+              }`}
+            >
+              <span className="mr-3 text-xl">📧</span>
+              Templates ({templates.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('campaigns')}
+              className={`flex-1 py-4 px-6 font-semibold text-lg transition-all duration-300 ${
+                activeTab === 'campaigns'
+                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
+                  : 'text-gray-600 hover:text-purple-600 hover:bg-purple-50 dark:text-gray-300 dark:hover:text-purple-400 dark:hover:bg-purple-900/20'
+              }`}
+            >
+              <span className="mr-3 text-xl">📬</span>
+              Campaigns ({campaigns.length})
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab('analytics');
+                if (isAdmin && !analytics) {
+                  loadAnalytics();
+                }
+              }}
+              className={`flex-1 py-4 px-6 font-semibold text-lg transition-all duration-300 ${
+                activeTab === 'analytics'
+                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
+                  : 'text-gray-600 hover:text-purple-600 hover:bg-purple-50 dark:text-gray-300 dark:hover:text-purple-400 dark:hover:bg-purple-900/20'
+              }`}
+            >
+              <span className="mr-3 text-xl">📊</span>
+              Analytics
+            </button>
+          </nav>
+        </div>
+
+        {/* Enhanced Main Content Area */}
+        <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80">
+          <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <CardTitle className="flex items-center gap-3 text-xl">
+                <div className="p-2 bg-white/20 rounded-xl">
+                  {activeTab === 'templates' && <Mail className="h-5 w-5" />}
+                  {activeTab === 'campaigns' && <Send className="h-5 w-5" />}
+                  {activeTab === 'analytics' && <BarChart3 className="h-5 w-5" />}
+                </div>
+                {activeTab === 'templates' && 'Email Templates'}
+                {activeTab === 'campaigns' && 'Email Campaigns'}
+                {activeTab === 'analytics' && 'Email Analytics'}
+              </CardTitle>
+              {activeTab === 'templates' && (
+                <Button 
+                  onClick={() => setCreateOpen(true)} 
+                  className="bg-white/20 hover:bg-white/30 text-white border-white/30 hover:border-white/50 px-6 py-3 rounded-2xl font-semibold transition-all duration-300"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  Create Template
+                </Button>
+              )}
+              {activeTab === 'campaigns' && (
+                <Button 
+                  onClick={() => setEditingCampaign({
+                    id: '',
+                    name: '',
+                    description: '',
+                    template_id: '',
+                    trigger_event: 'lead_captured',
+                    is_active: true,
+                    created_at: '',
+                    updated_at: ''
+                  })} 
+                  className="bg-white/20 hover:bg-white/30 text-white border-white/30 hover:border-white/50 px-6 py-3 rounded-2xl font-semibold transition-all duration-300"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  Create Campaign
+                </Button>
+              )}
+              {activeTab === 'analytics' && (
+                <Button 
+                  onClick={loadAnalytics} 
+                  disabled={analyticsLoading} 
+                  className="bg-white/20 hover:bg-white/30 text-white border-white/30 hover:border-white/50 px-6 py-3 rounded-2xl font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {analyticsLoading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  ) : (
+                    <BarChart3 className="h-5 w-5 mr-2" />
+                  )}
+                  Refresh Analytics
+                </Button>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent className="p-6">
           {/* Templates Tab - Table View with Pagination */}
           {activeTab === 'templates' && (
             <>
@@ -1314,7 +1351,8 @@ const EmailAutomationSimple: React.FC = () => {
         </DialogContent>
       </Dialog>
     </div>
-  );
+  </div>
+);
 };
 
 export default EmailAutomationSimple;

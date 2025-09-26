@@ -19,8 +19,12 @@ export const DebtImportTools: React.FC<DebtImportToolsProps> = ({ onImportDebts 
   // CSV Import Handler
   const handleCSVImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      console.log('No file selected');
+      return;
+    }
 
+    console.log('CSV Import: Processing file:', file.name, 'Size:', file.size);
     setIsProcessing(true);
     const reader = new FileReader();
     
@@ -106,6 +110,7 @@ export const DebtImportTools: React.FC<DebtImportToolsProps> = ({ onImportDebts 
       return;
     }
 
+    console.log('Bulk Entry: Processing text:', bulkText);
     setIsProcessing(true);
     
     try {
@@ -160,35 +165,56 @@ export const DebtImportTools: React.FC<DebtImportToolsProps> = ({ onImportDebts 
 
   // Download CSV Template
   const downloadTemplate = () => {
+    console.log('Download Template: Starting download');
     const template = `Debt Name,Balance,Min Payment,Interest Rate,Due Date,Debt Type,Description
 Chase Freedom,5000.00,150.00,18.99,15,credit_card,Main credit card
 Student Loan,25000.00,300.00,6.50,1,student_loan,Federal student loan
 Car Payment,15000.00,350.00,4.99,28,auto_loan,2020 Honda Civic`;
     
-    const blob = new Blob([template], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'debt-template.csv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-    
-    toast({
-      title: "Template Downloaded",
-      description: "CSV template saved to your downloads folder",
-    });
+    try {
+      const blob = new Blob([template], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'debt-template.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      
+      console.log('Download Template: Download completed');
+      toast({
+        title: "Template Downloaded",
+        description: "CSV template saved to your downloads folder",
+      });
+    } catch (error) {
+      console.error('Download Template Error:', error);
+      toast({
+        title: "Download Error",
+        description: "Failed to download template",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
-    <div className="flex flex-wrap gap-2">
-      {/* CSV Import Button */}
+    <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+        <FileText className="h-5 w-5" />
+        Import Tools
+      </h3>
+      <div className="flex flex-wrap gap-3">
+        {/* CSV Import Button */}
       <Button 
         variant="outline" 
-        onClick={() => document.getElementById('csv-import')?.click()}
+        onClick={() => {
+          const input = document.getElementById('csv-import') as HTMLInputElement;
+          if (input) {
+            input.click();
+          }
+        }}
         disabled={isProcessing}
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 text-gray-700 border-gray-300 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors"
       >
         {isProcessing ? (
           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
@@ -209,7 +235,7 @@ Car Payment,15000.00,350.00,4.99,28,auto_loan,2020 Honda Civic`;
       {/* Bulk Entry Modal */}
       <Dialog open={showBulkModal} onOpenChange={setShowBulkModal}>
         <DialogTrigger asChild>
-          <Button variant="outline" className="flex items-center gap-2">
+          <Button variant="outline" className="flex items-center gap-2 text-gray-700 border-gray-300 hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-colors">
             <Plus className="h-4 w-4" />
             Bulk Entry
           </Button>
@@ -296,14 +322,15 @@ Car Payment,15000.00,350.00,4.99,28,auto_loan,2020 Honda Civic`;
 
       {/* Download Template Button */}
       <Button 
-        variant="ghost" 
+        variant="outline" 
         size="sm"
         onClick={downloadTemplate}
-        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+        className="text-blue-600 border-blue-300 hover:text-blue-700 hover:bg-blue-50 hover:border-blue-400 transition-colors"
       >
         <Download className="h-4 w-4 mr-1" />
         CSV Template
       </Button>
+      </div>
     </div>
   );
 };
