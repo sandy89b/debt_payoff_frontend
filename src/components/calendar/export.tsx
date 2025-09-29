@@ -213,161 +213,187 @@ export const Export: React.FC<ExportProps> = ({ debts, extraPayment = 0 }) => {
   const totalAmount = schedule.reduce((sum, payment) => sum + payment.amount, 0);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Export Payment Schedule</h1>
-        <p className="text-muted-foreground">Export your payment schedule to external calendars and apps</p>
-      </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        {/* Header with Clear Hierarchy */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Export Payment Schedule
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
+            Export your payment schedule to external calendars and apps
+          </p>
+        </div>
 
-      {/* Export Options */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Export Options</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Export Format</label>
-              <Select value={exportFormat} onValueChange={(value: any) => setExportFormat(value)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="ics">
-                    <div className="flex items-center gap-2">
-                      <CalendarIcon className="h-4 w-4" />
-                      ICS Calendar File
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="csv">
-                    <div className="flex items-center gap-2">
-                      <FileText className="h-4 w-4" />
-                      CSV Spreadsheet
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="google">
-                    <div className="flex items-center gap-2">
-                      <ExternalLink className="h-4 w-4" />
-                      Google Calendar
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="outlook">
-                    <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4" />
-                      Outlook Calendar
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+        {/* Export Options */}
+        <Card className="mb-8">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
+              Export Options
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Export Format
+                </label>
+                <Select value={exportFormat} onValueChange={(value: any) => setExportFormat(value)}>
+                  <SelectTrigger className="h-12">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ics">
+                      <div className="flex items-center gap-3">
+                        <CalendarIcon className="h-4 w-4 text-blue-600" />
+                        <span>ICS Calendar File</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="csv">
+                      <div className="flex items-center gap-3">
+                        <FileText className="h-4 w-4 text-green-600" />
+                        <span>CSV Spreadsheet</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="google">
+                      <div className="flex items-center gap-3">
+                        <ExternalLink className="h-4 w-4 text-purple-600" />
+                        <span>Google Calendar</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="outlook">
+                      <div className="flex items-center gap-3">
+                        <Mail className="h-4 w-4 text-orange-600" />
+                        <span>Outlook Calendar</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Content Type
+                </label>
+                <Select value={exportType} onValueChange={(value: any) => setExportType(value)}>
+                  <SelectTrigger className="h-12">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="payments">Payment Schedule</SelectItem>
+                    <SelectItem value="goals">Goal Deadlines</SelectItem>
+                    <SelectItem value="all">Everything</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Content Type</label>
-              <Select value={exportType} onValueChange={(value: any) => setExportType(value)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="payments">Payment Schedule</SelectItem>
-                  <SelectItem value="goals">Goal Deadlines</SelectItem>
-                  <SelectItem value="all">Everything</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex gap-3">
+              <Button onClick={handleExport} className="flex-1 h-12 text-base font-medium">
+                <Download className="h-5 w-5 mr-2" />
+                Export Schedule
+              </Button>
+              <Button variant="outline" onClick={copyScheduleToClipboard} className="h-12 px-6">
+                <Copy className="h-5 w-5 mr-2" />
+                Copy
+              </Button>
             </div>
-          </div>
-          
-          <div className="flex gap-2">
-            <Button onClick={handleExport} className="flex-1">
-              <Download className="h-4 w-4 mr-2" />
-              Export Schedule
-            </Button>
-            <Button variant="outline" onClick={copyScheduleToClipboard}>
-              <Copy className="h-4 w-4 mr-2" />
-              Copy
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
 
-      {/* Schedule Preview */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Schedule Preview</CardTitle>
-          <div className="flex gap-2">
-            <Badge variant="secondary">{totalPayments} payments</Badge>
-            <Badge variant="secondary">Total: ${totalAmount.toFixed(2)}</Badge>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {schedule.length === 0 ? (
-            <p className="text-muted-foreground text-center py-8">
-              No payment schedule available. Add debts to generate a schedule.
-            </p>
-          ) : (
-            <div className="max-h-96 overflow-y-auto space-y-2">
-              {schedule.slice(0, 10).map((payment, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <p className="font-medium">{payment.debtName}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {format(payment.date, 'MMM d, yyyy')} • {payment.type}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-medium">${payment.amount.toFixed(2)}</p>
-                    <p className="text-sm text-muted-foreground">
-                      Balance: ${payment.balance.toFixed(2)}
-                    </p>
-                  </div>
-                </div>
-              ))}
-              {schedule.length > 10 && (
-                <p className="text-center text-muted-foreground py-2">
-                  ... and {schedule.length - 10} more payments
+        {/* Schedule Preview */}
+        <Card className="mb-8">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
+                Schedule Preview
+              </CardTitle>
+              <div className="flex gap-2">
+                <Badge variant="secondary" className="px-3 py-1">
+                  {totalPayments} payments
+                </Badge>
+                <Badge variant="secondary" className="px-3 py-1">
+                  Total: ${totalAmount.toFixed(2)}
+                </Badge>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {schedule.length === 0 ? (
+              <div className="text-center py-12">
+                <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 dark:text-gray-400 text-lg">
+                  No payment schedule available. Add debts to generate a schedule.
                 </p>
-              )}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+              </div>
+            ) : (
+              <div className="max-h-96 overflow-y-auto space-y-3">
+                {schedule.slice(0, 10).map((payment, index) => (
+                  <div key={index} className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">{payment.debtName}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {format(payment.date, 'MMM d, yyyy')} • {payment.type}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium text-gray-900 dark:text-white">${payment.amount.toFixed(2)}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Balance: ${payment.balance.toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+                {schedule.length > 10 && (
+                  <p className="text-center text-gray-600 dark:text-gray-400 py-4">
+                    ... and {schedule.length - 10} more payments
+                  </p>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
-      {/* Quick Links */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Calendar Links</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-4">
-            <Button 
-              variant="outline" 
-              onClick={() => window.open('https://calendar.google.com', '_blank')}
-              className="h-auto p-4 flex flex-col items-start"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <ExternalLink className="h-4 w-4" />
-                <span className="font-medium">Google Calendar</span>
-              </div>
-              <p className="text-sm text-muted-foreground text-left">
-                Import ICS files or create events manually
-              </p>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              onClick={() => window.open('https://outlook.live.com/calendar', '_blank')}
-              className="h-auto p-4 flex flex-col items-start"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <Mail className="h-4 w-4" />
-                <span className="font-medium">Outlook Calendar</span>
-              </div>
-              <p className="text-sm text-muted-foreground text-left">
-                Sync with Microsoft Outlook and Office 365
-              </p>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+        {/* Quick Links */}
+        <Card>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
+              Quick Calendar Links
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-4">
+              <Button 
+                variant="outline" 
+                onClick={() => window.open('https://calendar.google.com', '_blank')}
+                className="h-auto p-6 flex flex-col items-start hover:bg-gray-50 dark:hover:bg-gray-800"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <ExternalLink className="h-5 w-5 text-purple-600" />
+                  <span className="font-medium text-gray-900 dark:text-white">Google Calendar</span>
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400 text-left">
+                  Import ICS files or create events manually
+                </p>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                onClick={() => window.open('https://outlook.live.com/calendar', '_blank')}
+                className="h-auto p-6 flex flex-col items-start hover:bg-gray-50 dark:hover:bg-gray-800"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <Mail className="h-5 w-5 text-orange-600" />
+                  <span className="font-medium text-gray-900 dark:text-white">Outlook Calendar</span>
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400 text-left">
+                  Sync with Microsoft Outlook and Office 365
+                </p>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

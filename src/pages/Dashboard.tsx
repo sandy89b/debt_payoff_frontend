@@ -108,312 +108,253 @@ const DashboardOverview: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      <div className="container mx-auto px-4 py-8 space-y-8">
-        {/* Enhanced Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center animate-float">
-              <TrendingUp className="h-8 w-8 text-white" />
-            </div>
-          </div>
-          <h1 className="text-4xl font-bold gradient-text-animated mb-4">
-            Dashboard
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Your comprehensive debt freedom journey overview
-          </p>
+    <div className="min-h-screen bg-white dark:bg-slate-900">
+      <div className="container mx-auto px-4 py-6 space-y-6">
+        {/* Minimal Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Dashboard</h1>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Your comprehensive debt freedom journey overview</p>
         </div>
 
-        {/* Enhanced Action Buttons */}
-        <div className="flex justify-center gap-4 mb-8">
+        {/* Action Buttons */}
+        <div className="flex gap-3 mb-6">
           <Button 
             variant="outline" 
             onClick={() => loadDashboardData(true)} 
             disabled={refreshing}
-            className="bg-white/80 backdrop-blur-sm border-purple-300 text-purple-600 hover:bg-purple-50 hover:border-purple-400 px-6 py-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            className="px-4 py-2"
           >
-            <RefreshCw className={`h-5 w-5 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
             {refreshing ? 'Refreshing...' : 'Refresh Data'}
           </Button>
           <Button 
             onClick={() => navigate('/calculator')} 
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            className="px-4 py-2"
           >
-            <TrendingUp className="h-5 w-5 mr-2" />
+            <TrendingUp className="h-4 w-4 mr-2" />
             Open Calculator
           </Button>
         </div>
 
-        {/* Enhanced Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 p-6 rounded-3xl shadow-lg card-hover">
-            <CardContent className="p-0">
+        {/* Statistics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card className="bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-red-700 dark:text-red-300 mb-2">Active Debt</p>
-                  <p className="text-3xl font-bold text-red-800 dark:text-red-200">{currency(totalActiveBalance)}</p>
-                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">Total outstanding</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Active Debt</p>
+                  <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{currency(totalActiveBalance)}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Total outstanding</p>
                 </div>
-                <div className="p-3 bg-red-500 rounded-2xl">
-                  <DollarSign className="h-8 w-8 text-white" />
-                </div>
+                <DollarSign className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-6 rounded-3xl shadow-lg card-hover">
-            <CardContent className="p-0">
+          <Card className="bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">Min Payments</p>
-                  <p className="text-3xl font-bold text-blue-800 dark:text-blue-200">{currency(totalActiveMinPayments)}</p>
-                  <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">Monthly commitment</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Min Payments</p>
+                  <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{currency(totalActiveMinPayments)}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Monthly commitment</p>
                 </div>
-                <div className="p-3 bg-blue-500 rounded-2xl">
-                  <TrendingUp className="h-8 w-8 text-white" />
-                </div>
+                <TrendingUp className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 p-6 rounded-3xl shadow-lg card-hover">
-            <CardContent className="p-0">
+          <Card className="bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-purple-700 dark:text-purple-300 mb-2">Active Debts</p>
-                  <p className="text-3xl font-bold text-purple-800 dark:text-purple-200">{active.length}</p>
-                  <p className="text-xs text-purple-600 dark:text-purple-400 mt-1">Accounts open</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Active Debts</p>
+                  <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{active.length}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Accounts open</p>
                 </div>
-                <div className="p-3 bg-purple-500 rounded-2xl">
-                  <CheckCircle2 className="h-8 w-8 text-white" />
-                </div>
+                <CheckCircle2 className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-6 rounded-3xl shadow-lg card-hover">
-            <CardContent className="p-0">
+          <Card className="bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-green-700 dark:text-green-300 mb-2">Weighted APR</p>
-                  <p className="text-3xl font-bold text-green-800 dark:text-green-200">{weightedApr.toFixed(2)}%</p>
-                  <p className="text-xs text-green-600 dark:text-green-400 mt-1">Average rate</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Weighted APR</p>
+                  <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{weightedApr.toFixed(2)}%</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Average rate</p>
                 </div>
-                <div className="p-3 bg-green-500 rounded-2xl">
-                  <Percent className="h-8 w-8 text-white" />
-                </div>
+                <Percent className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Enhanced Middle Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80">
-            <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/20 rounded-xl">
-                  <Calendar className="h-6 w-6" />
-                </div>
-                <CardTitle className="text-xl font-bold">Upcoming Payment</CardTitle>
-              </div>
+        {/* Middle Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Upcoming Payment</CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent>
               {nextDue ? (
-                <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl">
-                  <div className="p-3 bg-blue-500 rounded-2xl">
-                    <Calendar className="h-6 w-6 text-white" />
-                  </div>
+                <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <Calendar className="h-6 w-6 text-gray-400" />
                   <div>
-                    <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">{nextDue.name}</div>
+                    <div className="font-semibold text-gray-900 dark:text-gray-100">{nextDue.name}</div>
                     <div className="text-sm text-gray-600 dark:text-gray-300">Due day {nextDue.dueDate} • Min {currency(nextDue.minimumPayment)}</div>
                   </div>
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Calendar className="h-8 w-8 text-gray-400" />
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-300 text-lg">No active debts yet.</p>
+                  <Calendar className="h-8 w-8 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 dark:text-gray-300">No active debts yet.</p>
                 </div>
               )}
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80">
-            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/20 rounded-xl">
-                  <Goal className="h-6 w-6" />
-                </div>
-                <CardTitle className="text-xl font-bold">Quick Actions</CardTitle>
-              </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Quick Actions</CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
-              <div className="grid grid-cols-2 gap-4">
+            <CardContent>
+              <div className="grid grid-cols-2 gap-3">
                 <Button 
                   variant="outline" 
                   onClick={() => navigate('/calculator')} 
-                  className="h-auto p-4 flex flex-col items-center gap-3 border-purple-300 text-purple-600 hover:bg-purple-50 hover:border-purple-400 rounded-2xl transition-all duration-300"
+                  className="h-auto p-3 flex flex-col items-center gap-2"
                 >
-                  <div className="p-2 bg-purple-100 rounded-xl">
-                    <TrendingUp className="h-6 w-6 text-purple-600" />
-                  </div>
-                  <span className="text-sm font-semibold">Calculator</span>
+                  <TrendingUp className="h-5 w-5" />
+                  <span className="text-sm">Calculator</span>
                 </Button>
                 <Button 
                   variant="outline" 
                   onClick={() => navigate('/calendar')} 
-                  className="h-auto p-4 flex flex-col items-center gap-3 border-blue-300 text-blue-600 hover:bg-blue-50 hover:border-blue-400 rounded-2xl transition-all duration-300"
+                  className="h-auto p-3 flex flex-col items-center gap-2"
                 >
-                  <div className="p-2 bg-blue-100 rounded-xl">
-                    <Calendar className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <span className="text-sm font-semibold">Calendar</span>
+                  <Calendar className="h-5 w-5" />
+                  <span className="text-sm">Calendar</span>
                 </Button>
                 <Button 
                   variant="outline" 
                   onClick={() => navigate('/goals')} 
-                  className="h-auto p-4 flex flex-col items-center gap-3 border-green-300 text-green-600 hover:bg-green-50 hover:border-green-400 rounded-2xl transition-all duration-300"
+                  className="h-auto p-3 flex flex-col items-center gap-2"
                 >
-                  <div className="p-2 bg-green-100 rounded-xl">
-                    <Goal className="h-6 w-6 text-green-600" />
-                  </div>
-                  <span className="text-sm font-semibold">Goals</span>
+                  <Goal className="h-5 w-5" />
+                  <span className="text-sm">Goals</span>
                 </Button>
                 <Button 
                   variant="outline" 
                   onClick={() => navigate('/reminders')} 
-                  className="h-auto p-4 flex flex-col items-center gap-3 border-orange-300 text-orange-600 hover:bg-orange-50 hover:border-orange-400 rounded-2xl transition-all duration-300"
+                  className="h-auto p-3 flex flex-col items-center gap-2"
                 >
-                  <div className="p-2 bg-orange-100 rounded-xl">
-                    <Bell className="h-6 w-6 text-orange-600" />
-                  </div>
-                  <span className="text-sm font-semibold">Reminders</span>
+                  <Bell className="h-5 w-5" />
+                  <span className="text-sm">Reminders</span>
                 </Button>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Enhanced App Overview Tiles */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80 cursor-pointer card-hover" onClick={() => navigate('/framework')}>
-            <CardContent className="p-6 flex items-center gap-4">
-              <div className="p-3 bg-blue-500 rounded-2xl">
-                <GraduationCap className="h-8 w-8 text-white"/>
-              </div>
+        {/* App Overview Tiles */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/framework')}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <GraduationCap className="h-6 w-6 text-gray-400"/>
               <div>
-                <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">Framework Steps</div>
+                <div className="font-semibold text-gray-900 dark:text-gray-100">Framework Steps</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Biblical and practical steps toward freedom</div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80 cursor-pointer card-hover" onClick={() => navigate('/devotionals')}>
-            <CardContent className="p-6 flex items-center gap-4">
-              <div className="p-3 bg-green-500 rounded-2xl">
-                <BookOpen className="h-8 w-8 text-white"/>
-              </div>
+          <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/devotionals')}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <BookOpen className="h-6 w-6 text-gray-400"/>
               <div>
-                <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">Daily Devotionals</div>
+                <div className="font-semibold text-gray-900 dark:text-gray-100">Daily Devotionals</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Stay motivated and focused</div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80 cursor-pointer card-hover" onClick={() => navigate('/achievements')}>
-            <CardContent className="p-6 flex items-center gap-4">
-              <div className="p-3 bg-yellow-500 rounded-2xl">
-                <Trophy className="h-8 w-8 text-white"/>
-              </div>
+          <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/achievements')}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <Trophy className="h-6 w-6 text-gray-400"/>
               <div>
-                <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">Achievements</div>
+                <div className="font-semibold text-gray-900 dark:text-gray-100">Achievements</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Milestones you have reached</div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80 cursor-pointer card-hover" onClick={() => navigate('/accountability')}>
-            <CardContent className="p-6 flex items-center gap-4">
-              <div className="p-3 bg-purple-500 rounded-2xl">
-                <Users className="h-8 w-8 text-white"/>
-              </div>
+          <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/accountability')}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <Users className="h-6 w-6 text-gray-400"/>
               <div>
-                <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">Accountability</div>
+                <div className="font-semibold text-gray-900 dark:text-gray-100">Accountability</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Invite support and track commitments</div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80 cursor-pointer card-hover" onClick={() => navigate('/prayers')}>
-            <CardContent className="p-6 flex items-center gap-4">
-              <div className="p-3 bg-pink-500 rounded-2xl">
-                <Heart className="h-8 w-8 text-white"/>
-              </div>
+          <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/prayers')}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <Heart className="h-6 w-6 text-gray-400"/>
               <div>
-                <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">Prayer Corner</div>
+                <div className="font-semibold text-gray-900 dark:text-gray-100">Prayer Corner</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Share requests and gratitude</div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80 cursor-pointer card-hover" onClick={() => navigate('/coaching')}>
-            <CardContent className="p-6 flex items-center gap-4">
-              <div className="p-3 bg-indigo-500 rounded-2xl">
-                <HeartHandshake className="h-8 w-8 text-white"/>
-              </div>
+          <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/coaching')}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <HeartHandshake className="h-6 w-6 text-gray-400"/>
               <div>
-                <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">Coaching</div>
+                <div className="font-semibold text-gray-900 dark:text-gray-100">Coaching</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Get help from our team</div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80 cursor-pointer card-hover" onClick={() => navigate('/income-optimization')}>
-            <CardContent className="p-6 flex items-center gap-4">
-              <div className="p-3 bg-emerald-500 rounded-2xl">
-                <LineChart className="h-8 w-8 text-white"/>
-              </div>
+          <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/income-optimization')}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <LineChart className="h-6 w-6 text-gray-400"/>
               <div>
-                <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">Income Optimization</div>
+                <div className="font-semibold text-gray-900 dark:text-gray-100">Income Optimization</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Increase margin for payoff</div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80 cursor-pointer card-hover" onClick={() => navigate('/emergency-fund-calculator')}>
-            <CardContent className="p-6 flex items-center gap-4">
-              <div className="p-3 bg-red-500 rounded-2xl">
-                <ShieldCheck className="h-8 w-8 text-white"/>
-              </div>
+          <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/emergency-fund-calculator')}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <ShieldCheck className="h-6 w-6 text-gray-400"/>
               <div>
-                <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">Emergency Fund</div>
+                <div className="font-semibold text-gray-900 dark:text-gray-100">Emergency Fund</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Build resilience for surprises</div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80 cursor-pointer card-hover" onClick={() => navigate('/giving-stewardship-tracker')}>
-            <CardContent className="p-6 flex items-center gap-4">
-              <div className="p-3 bg-teal-500 rounded-2xl">
-                <HelpingHand className="h-8 w-8 text-white"/>
-              </div>
+          <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/giving-stewardship-tracker')}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <HelpingHand className="h-6 w-6 text-gray-400"/>
               <div>
-                <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">Giving Tracker</div>
+                <div className="font-semibold text-gray-900 dark:text-gray-100">Giving Tracker</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Track generosity and impact</div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80 cursor-pointer card-hover" onClick={() => navigate('/legacy-planning')}>
-            <CardContent className="p-6 flex items-center gap-4">
-              <div className="p-3 bg-gray-500 rounded-2xl">
-                <Settings className="h-8 w-8 text-white"/>
-              </div>
+          <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/legacy-planning')}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <Settings className="h-6 w-6 text-gray-400"/>
               <div>
-                <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">Legacy Planning</div>
+                <div className="font-semibold text-gray-900 dark:text-gray-100">Legacy Planning</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Plan for the long term</div>
               </div>
             </CardContent>

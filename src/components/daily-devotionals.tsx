@@ -129,151 +129,167 @@ export function DailyDevotionals() {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Daily Devotionals</h1>
-        <p className="text-muted-foreground">
-          Biblical wisdom for your debt freedom journey
-        </p>
-      </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        {/* Header with Clear Hierarchy */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Daily Devotionals
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
+            Biblical wisdom for your debt freedom journey
+          </p>
+        </div>
 
-      {/* Date Navigation */}
-      <Card className="mb-6">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-muted-foreground" />
-              <span className="font-medium">{format(currentDate, 'EEEE, MMMM d, yyyy')}</span>
+        {/* Date Navigation */}
+        <Card className="mb-8 border border-gray-200 dark:border-gray-700">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Calendar className="h-5 w-5 text-purple-600" />
+                <span className="font-medium text-gray-900 dark:text-white text-lg">
+                  {format(currentDate, 'EEEE, MMMM d, yyyy')}
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigateDate('prev')}
+                  className="h-10 px-4"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={goToToday}
+                  className="h-10 px-4"
+                >
+                  Today
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigateDate('next')}
+                  className="h-10 px-4"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => navigateDate('prev')}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={goToToday}
-              >
-                Today
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => navigateDate('next')}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
+          </CardHeader>
+        </Card>
 
-      {/* Daily Devotional */}
-      <Card className="mb-6">
-        <CardHeader>
-          <div className="flex items-start justify-between">
-            <div>
-              <CardTitle className="text-2xl mb-2">{currentDevotional.title}</CardTitle>
-              <CardDescription className="flex items-center gap-2">
-                <BookOpen className="h-4 w-4" />
-                {currentDevotional.verse}
-              </CardDescription>
+        {/* Daily Devotional */}
+        <Card className="mb-8 border border-gray-200 dark:border-gray-700">
+          <CardHeader className="pb-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <CardTitle className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
+                  {currentDevotional.title}
+                </CardTitle>
+                <CardDescription className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                  <BookOpen className="h-4 w-4" />
+                  {currentDevotional.verse}
+                </CardDescription>
+              </div>
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => toggleFavorite(currentDevotional.id)}
+                  className={`h-10 w-10 ${favorites.includes(currentDevotional.id) ? 'text-yellow-500' : 'text-gray-500'}`}
+                >
+                  <Star className={`h-5 w-5 ${favorites.includes(currentDevotional.id) ? 'fill-current' : ''}`} />
+                </Button>
+                {isRead && (
+                  <Badge variant="secondary" className="bg-green-100 text-green-800 px-3 py-1">
+                    <Clock className="h-4 w-4 mr-1" />
+                    Read
+                  </Badge>
+                )}
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => toggleFavorite(currentDevotional.id)}
-                className={favorites.includes(currentDevotional.id) ? 'text-yellow-500' : ''}
-              >
-                <Star className={`h-4 w-4 ${favorites.includes(currentDevotional.id) ? 'fill-current' : ''}`} />
-              </Button>
-              {isRead && (
-                <Badge variant="secondary" className="bg-green-100 text-green-800">
-                  <Clock className="h-3 w-3 mr-1" />
-                  Read
+          </CardHeader>
+          
+          <CardContent className="space-y-8">
+            {/* Scripture */}
+            <div className="bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-600 p-6 rounded-r-lg">
+              <p className="text-gray-900 dark:text-white italic font-medium leading-relaxed text-lg">
+                "{currentDevotional.verseText}"
+              </p>
+            </div>
+
+            {/* Tags */}
+            <div className="flex flex-wrap gap-2">
+              {currentDevotional.tags.map(tag => (
+                <Badge key={tag} variant="outline" className="text-sm px-3 py-1 border-gray-300 dark:border-gray-600">
+                  {tag}
                 </Badge>
-              )}
+              ))}
             </div>
-          </div>
-        </CardHeader>
-        
-        <CardContent className="space-y-6">
-          {/* Scripture */}
-          <div className="bg-primary/5 border-l-4 border-primary p-4 rounded-r-lg">
-            <p className="text-foreground italic font-medium leading-relaxed">
-              "{currentDevotional.verseText}"
-            </p>
-          </div>
 
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2">
-            {currentDevotional.tags.map(tag => (
-              <Badge key={tag} variant="outline" className="text-xs">
-                {tag}
-              </Badge>
-            ))}
-          </div>
+            <Separator className="bg-gray-200 dark:bg-gray-700" />
 
-          <Separator />
+            {/* Lesson */}
+            <div>
+              <h3 className="font-semibold text-xl mb-4 flex items-center gap-3 text-gray-900 dark:text-white">
+                <Heart className="h-6 w-6 text-purple-600" />
+                Today's Lesson
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base">
+                {currentDevotional.lesson}
+              </p>
+            </div>
 
-          {/* Lesson */}
-          <div>
-            <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-              <Heart className="h-5 w-5 text-primary" />
-              Today's Lesson
-            </h3>
-            <p className="text-muted-foreground leading-relaxed">
-              {currentDevotional.lesson}
-            </p>
-          </div>
+            <Separator className="bg-gray-200 dark:bg-gray-700" />
 
-          <Separator />
+            {/* Application */}
+            <div>
+              <h3 className="font-semibold text-xl mb-4 text-gray-900 dark:text-white">
+                Practical Application
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base">
+                {currentDevotional.application}
+              </p>
+            </div>
 
-          {/* Application */}
-          <div>
-            <h3 className="font-semibold text-lg mb-3">Practical Application</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              {currentDevotional.application}
-            </p>
-          </div>
+            <Separator className="bg-gray-200 dark:bg-gray-700" />
 
-          <Separator />
+            {/* Prayer */}
+            <div>
+              <h3 className="font-semibold text-xl mb-4 text-gray-900 dark:text-white">
+                Prayer
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300 italic leading-relaxed text-base">
+                {currentDevotional.prayer}
+              </p>
+            </div>
 
-          {/* Prayer */}
-          <div>
-            <h3 className="font-semibold text-lg mb-3">Prayer</h3>
-            <p className="text-muted-foreground italic leading-relaxed">
-              {currentDevotional.prayer}
-            </p>
-          </div>
+            {/* Action Button */}
+            <div className="flex justify-center pt-6">
+              <Button 
+                onClick={markAsRead}
+                disabled={isRead}
+                className="min-w-40 h-12 text-base font-medium"
+              >
+                {isRead ? "Read Today" : "Mark as Read"}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-          {/* Action Button */}
-          <div className="flex justify-center pt-4">
-            <Button 
-              onClick={markAsRead}
-              disabled={isRead}
-              className="min-w-32"
-            >
-              {isRead ? "Read Today" : "Mark as Read"}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Reading Stats */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <span>Devotionals read: {readDevotionals.length}</span>
-            <span>Favorites saved: {favorites.length}</span>
-          </div>
-        </CardContent>
-      </Card>
+        {/* Reading Stats */}
+        <Card className="border border-gray-200 dark:border-gray-700">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between text-base text-gray-600 dark:text-gray-400">
+              <span>Devotionals read: {readDevotionals.length}</span>
+              <span>Favorites saved: {favorites.length}</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

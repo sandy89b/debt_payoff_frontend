@@ -19,7 +19,6 @@ import OAuthSuccess from "./pages/auth/OAuthSuccess";
 import OAuthError from "./pages/auth/OAuthError";
 import SetPassword from "./pages/auth/SetPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
-import EmailAutomationDashboard from "./pages/admin/EmailAutomationDashboard";
 import { PaymentCalendar } from "@/components/calendar/payment-calendar";
 import { GoalPlanning } from "@/components/calendar/goal-planning";
 import { Reminders } from "@/components/calendar/reminders";
@@ -37,8 +36,6 @@ import { CoachingIntegration } from "@/components/coaching-integration";
 import { AdminDebtManagement } from "@/components/admin/AdminDebtManagement";
 import { LeadManagement } from "@/pages/admin/LeadManagement";
 import { LeadEmailAnalytics } from "@/pages/admin/LeadEmailAnalytics";
-import EmailAutomation from "./pages/calendar/EmailAutomation";
-import EmailAutomationTest from "./pages/calendar/EmailAutomationTest";
 import EmailAutomationSimple from "./pages/calendar/EmailAutomationSimple";
 import { useDebtsStorage } from "@/hooks/useDebtsStorage";
 import { GuestDebtCalculator } from "@/components/debt-calculator/GuestDebtCalculator";
@@ -82,6 +79,7 @@ const App = () => {
                     <Route path="/auth/error" element={<OAuthError />} />
                     
                     {/* Protected Routes - Require Authentication */}
+                    
                     <Route path="/dashboard" element={<ProtectedRoute><DashboardOverview /></ProtectedRoute>} />
                     <Route path="/upgrade" element={<ProtectedRoute><UpgradePage /></ProtectedRoute>} />
                     <Route path="/account" element={<ProtectedRoute><UserSettingsLayout /></ProtectedRoute>}>

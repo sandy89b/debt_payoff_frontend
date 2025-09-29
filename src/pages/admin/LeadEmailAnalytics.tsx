@@ -228,28 +228,19 @@ export const LeadEmailAnalytics: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      <div className="container mx-auto px-4 py-8 space-y-8">
-        {/* Enhanced Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center animate-float">
-              <BarChart3 className="h-8 w-8 text-white" />
-            </div>
-          </div>
-          <h1 className="text-4xl font-bold gradient-text-animated mb-4">
-            Lead Email Analytics
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Track email performance and lead engagement with comprehensive analytics
-          </p>
+    <div className="min-h-screen bg-white dark:bg-slate-900">
+      <div className="container mx-auto px-4 py-6 space-y-6">
+        {/* Minimal Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Lead Email Analytics</h1>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Track email performance and lead engagement</p>
         </div>
 
-        {/* Enhanced Controls */}
-        <div className="flex justify-center mb-8">
-          <div className="flex gap-4">
+        {/* Controls */}
+        <div className="mb-6">
+          <div className="flex gap-3">
             <Select value={dateRange} onValueChange={setDateRange}>
-              <SelectTrigger className="w-48 text-lg py-4 border-2 border-purple-200 dark:border-purple-800/30 rounded-xl focus:border-purple-400 dark:focus:border-purple-600 bg-white dark:bg-slate-800">
+              <SelectTrigger className="w-44">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -260,7 +251,7 @@ export const LeadEmailAnalytics: React.FC = () => {
             </Select>
             
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-48 text-lg py-4 border-2 border-purple-200 dark:border-purple-800/30 rounded-xl focus:border-purple-400 dark:focus:border-purple-600 bg-white dark:bg-slate-800">
+              <SelectTrigger className="w-44">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -276,76 +267,63 @@ export const LeadEmailAnalytics: React.FC = () => {
           </div>
         </div>
 
-        {/* Enhanced Analytics Cards */}
+        {/* Analytics Cards */}
         {analytics && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-6 rounded-3xl shadow-lg card-hover">
-              <CardContent className="p-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card className="bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
+              <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">Total Emails</p>
-                    <p className="text-3xl font-bold text-blue-800 dark:text-blue-200">{analytics.totalEmailsSent}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Total Emails</p>
+                    <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{analytics.totalEmailsSent}</p>
                   </div>
-                  <div className="p-3 bg-blue-500 rounded-2xl">
-                    <Mail className="h-8 w-8 text-white" />
-                  </div>
+                  <Mail className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-6 rounded-3xl shadow-lg card-hover">
-              <CardContent className="p-0">
+            <Card className="bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
+              <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-green-700 dark:text-green-300 mb-2">Open Rate</p>
-                    <p className="text-3xl font-bold text-green-800 dark:text-green-200">{(analytics.openRate || 0).toFixed(1)}%</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Open Rate</p>
+                    <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{(analytics.openRate || 0).toFixed(1)}%</p>
                   </div>
-                  <div className="p-3 bg-green-500 rounded-2xl">
-                    <TrendingUp className="h-8 w-8 text-white" />
-                  </div>
+                  <TrendingUp className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 p-6 rounded-3xl shadow-lg card-hover">
-              <CardContent className="p-0">
+            <Card className="bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
+              <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-purple-700 dark:text-purple-300 mb-2">Click Rate</p>
-                    <p className="text-3xl font-bold text-purple-800 dark:text-purple-200">{(analytics.clickRate || 0).toFixed(1)}%</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Click Rate</p>
+                    <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{(analytics.clickRate || 0).toFixed(1)}%</p>
                   </div>
-                  <div className="p-3 bg-purple-500 rounded-2xl">
-                    <BarChart3 className="h-8 w-8 text-white" />
-                  </div>
+                  <BarChart3 className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 p-6 rounded-3xl shadow-lg card-hover">
-              <CardContent className="p-0">
+            <Card className="bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
+              <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-orange-700 dark:text-orange-300 mb-2">Conversion Rate</p>
-                    <p className="text-3xl font-bold text-orange-800 dark:text-orange-200">{(analytics.conversionRate || 0).toFixed(1)}%</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Conversion Rate</p>
+                    <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{(analytics.conversionRate || 0).toFixed(1)}%</p>
                   </div>
-                  <div className="p-3 bg-orange-500 rounded-2xl">
-                    <CheckCircle className="h-8 w-8 text-white" />
-                  </div>
+                  <CheckCircle className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </CardContent>
             </Card>
           </div>
         )}
 
-        {/* Enhanced Email Logs Table */}
-        <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80">
-          <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6">
-            <CardTitle className="flex items-center gap-3 text-xl">
-              <div className="p-2 bg-white/20 rounded-xl">
-                <Mail className="h-5 w-5" />
-              </div>
-              Recent Email Activity
-            </CardTitle>
+        {/* Email Logs Table */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Recent Email Activity</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
@@ -383,7 +361,7 @@ export const LeadEmailAnalytics: React.FC = () => {
                       </td>
                       <td className="p-6">
                         <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-purple-500" />
+                          <Calendar className="h-4 w-4 text-gray-400" />
                           <span className="text-sm text-gray-700 dark:text-gray-300">{formatDate(log.sentAt)}</span>
                         </div>
                       </td>
@@ -400,25 +378,17 @@ export const LeadEmailAnalytics: React.FC = () => {
 
             {emailLogs.length === 0 && (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-gradient-to-r from-gray-400 to-gray-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Mail className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-2">No email activity found</h3>
-                <p className="text-gray-500 dark:text-gray-500">No email logs match your current criteria.</p>
+                <h3 className="text-base font-semibold text-gray-600 dark:text-gray-400 mb-2">No email activity found</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-500">No email logs match your current criteria.</p>
               </div>
             )}
           </CardContent>
         </Card>
 
-        {/* Enhanced Lead Email Stats */}
-        <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden dark:bg-slate-800/80">
-          <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6">
-            <CardTitle className="flex items-center gap-3 text-xl">
-              <div className="p-2 bg-white/20 rounded-xl">
-                <Users className="h-5 w-5" />
-              </div>
-              Lead Email Performance
-            </CardTitle>
+        {/* Lead Email Stats */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Lead Email Performance</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
@@ -465,11 +435,8 @@ export const LeadEmailAnalytics: React.FC = () => {
 
             {leadStats.length === 0 && (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-gradient-to-r from-gray-400 to-gray-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Users className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-2">No lead email stats found</h3>
-                <p className="text-gray-500 dark:text-gray-500">No lead email performance data available.</p>
+                <h3 className="text-base font-semibold text-gray-600 dark:text-gray-400 mb-2">No lead email stats found</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-500">No lead email performance data available.</p>
               </div>
             )}
           </CardContent>

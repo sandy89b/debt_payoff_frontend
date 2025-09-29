@@ -185,7 +185,8 @@ export function Accountability() {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Accountability Partners</h1>
         <p className="text-muted-foreground">
@@ -436,6 +437,7 @@ export function Accountability() {
             </CardContent>
           </Card>
         </div>
+      </div>
       </div>
     </div>
   );
