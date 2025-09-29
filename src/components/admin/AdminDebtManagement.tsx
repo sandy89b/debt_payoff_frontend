@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { Search, Users, DollarSign, TrendingUp, Eye } from 'lucide-react';
+import LoadingSpinner from '../ui/LoadingSpinner';
 
 interface DebtWithUser {
   id: number;
@@ -150,7 +151,7 @@ export const AdminDebtManagement: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
+        <LoadingSpinner size="md" />
       </div>
     );
   }

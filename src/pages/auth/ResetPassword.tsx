@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff, Lock, CheckCircle, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 const ResetPassword: React.FC = () => {
   const [newPassword, setNewPassword] = useState('');
@@ -115,8 +116,7 @@ const ResetPassword: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-brand-purple/5 to-brand-charcoal/5 flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardContent className="p-8 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-purple mx-auto mb-4"></div>
-            <p className="text-gray-600">Validating reset token...</p>
+            <LoadingSpinner text="Validating reset token..." size="md" />
           </CardContent>
         </Card>
       </div>

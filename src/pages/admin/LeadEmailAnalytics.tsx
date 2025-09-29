@@ -4,6 +4,7 @@ import { PressButton as Button } from "@/components/ui/PressButton";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 interface EmailAnalytics {
   totalEmailsSent: number;
@@ -220,10 +221,7 @@ export const LeadEmailAnalytics: React.FC = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-lg text-muted-foreground">Loading analytics...</p>
-          </div>
+          <LoadingSpinner text="Loading analytics..." />
         </div>
       </div>
     );

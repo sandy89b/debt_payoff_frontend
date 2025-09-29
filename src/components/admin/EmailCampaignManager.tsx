@@ -57,6 +57,7 @@ const EmailCampaignManager: React.FC = () => {
     { value: 'debt_paid', label: 'Debt Paid Off' },
     { value: 'weekly_schedule', label: 'Weekly Schedule' },
     { value: 'monthly_schedule', label: 'Monthly Schedule' },
+    { value: 'admin_invite', label: 'Admin Invite' },
   ];
 
   const handleOpenModal = (campaign?: EmailCampaign) => {

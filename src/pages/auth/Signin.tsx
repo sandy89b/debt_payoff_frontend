@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 export const Signin: React.FC = () => {
   const [emailOrPhone, setEmailOrPhone] = useState('');
@@ -259,7 +260,7 @@ export const Signin: React.FC = () => {
               >
                 {isLoading ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                    <LoadingSpinner size="sm" inline className="mr-2" />
                     Signing in...
                   </>
                 ) : (

@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { VerificationMethodModal } from '@/components/auth/VerificationMethodModal';
 import { PhoneInput } from '@/components/ui/PhoneInput';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 export const Signup: React.FC = () => {
   const [firstName, setFirstName] = useState('');
@@ -417,7 +418,7 @@ export const Signup: React.FC = () => {
               >
                 {isLoading ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                    <LoadingSpinner size="sm" inline className="mr-2" />
                     Creating Account...
                   </>
                 ) : (

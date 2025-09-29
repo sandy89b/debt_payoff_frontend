@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useEmailAutomation } from '../../contexts/EmailAutomationContext';
+import LoadingSpinner from '../ui/LoadingSpinner';
 
 const EmailAnalytics: React.FC = () => {
   const { analytics, campaigns, getAnalytics } = useEmailAutomation();
@@ -30,8 +31,7 @@ const EmailAnalytics: React.FC = () => {
     return (
       <div className="p-6">
         <div className="flex justify-center items-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-          <span className="ml-2 text-gray-600">Loading analytics...</span>
+          <LoadingSpinner text="Loading analytics..." size="md" />
         </div>
       </div>
     );

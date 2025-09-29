@@ -1256,6 +1256,7 @@ const EmailAutomationSimple: React.FC = () => {
                     <SelectItem value="debt_paid_off">Debt Paid Off</SelectItem>
                     <SelectItem value="milestone_reached">Milestone Reached</SelectItem>
                     <SelectItem value="welcome_series">Welcome Series</SelectItem>
+                    <SelectItem value="admin_invite">Admin Invite</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

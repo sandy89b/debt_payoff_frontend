@@ -4,6 +4,7 @@ import { PressButton as Button } from "@/components/ui/PressButton";
 import { useToast } from '@/hooks/use-toast';
 import { DollarSign, TrendingUp, CheckCircle2, Calendar, Percent, Goal, Bell, GraduationCap, BookOpen, Trophy, Users, Heart, HeartHandshake, LineChart, ShieldCheck, HelpingHand, Settings, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../components/ui/LoadingSpinner';
 
 interface Debt {
   id: string;
@@ -101,12 +102,7 @@ const DashboardOverview: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center animate-float mx-auto mb-4">
-            <RefreshCw className="h-8 w-8 text-white animate-spin" />
-          </div>
-          <p className="text-xl text-gray-600 dark:text-gray-300">Loading dashboard...</p>
-        </div>
+        <LoadingSpinner text="Loading dashboard..." />
       </div>
     );
   }

@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import { 
   Mail, 
   Send, 
@@ -445,7 +446,8 @@ const EmailAutomation: React.FC = () => {
       'first_debt_entry': 'First Debt Entry',
       'debt_paid_off': 'Debt Paid Off',
       'weekly_check_in': 'Weekly Check-in',
-      'monthly_report': 'Monthly Report'
+      'monthly_report': 'Monthly Report',
+      'admin_invite': 'Admin Invite'
     };
     return labels[triggerEvent] || triggerEvent;
   };
@@ -469,10 +471,7 @@ const EmailAutomation: React.FC = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Loading email automation...</p>
-          </div>
+          <LoadingSpinner text="Loading email automation..." size="md" />
         </div>
       </div>
     );
@@ -796,6 +795,7 @@ const EmailAutomation: React.FC = () => {
                           <SelectItem value="debt_paid_off">Debt Paid Off</SelectItem>
                           <SelectItem value="weekly_check_in">Weekly Check-in</SelectItem>
                           <SelectItem value="monthly_report">Monthly Report</SelectItem>
+                          <SelectItem value="admin_invite">Admin Invite</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

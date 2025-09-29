@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useEmailAutomation } from '../../contexts/EmailAutomationContext';
 import { useToast } from '@/hooks/use-toast';
+import LoadingSpinner from '../ui/LoadingSpinner';
 
 interface EmailTemplate {
   id: number;
@@ -168,8 +169,7 @@ const EmailTemplateManager: React.FC = () => {
       {/* Loading State */}
       {loading && (
         <div className="flex justify-center items-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-          <span className="ml-2 text-gray-600">Loading templates...</span>
+          <LoadingSpinner text="Loading templates..." size="md" />
         </div>
       )}
 
