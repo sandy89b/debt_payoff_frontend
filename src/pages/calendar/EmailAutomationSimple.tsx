@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { Mail, Send, BarChart3, Plus, Eye, Edit, Trash2, Save, X, Play, Pause, Calendar, Users, MoreHorizontal } from 'lucide-react';
+import { Mail, Send, BarChart3, Plus, Eye, Edit, Trash2, Save, X, Play, Pause, Calendar, Users, MoreHorizontal, ArrowUp, ArrowDown } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious, PaginationLink } from '@/components/ui/pagination';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -77,6 +77,10 @@ const EmailAutomationSimple: React.FC = () => {
   const [campaignPageSize, setCampaignPageSize] = useState<number>(20);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [templateToDelete, setTemplateToDelete] = useState<EmailTemplate | null>(null);
+  const [templateSortKey, setTemplateSortKey] = useState<'name' | 'subject' | 'template_type' | 'category' | 'created_at' | 'is_active'>('created_at');
+  const [templateSortDir, setTemplateSortDir] = useState<'asc' | 'desc'>('desc');
+  const [campaignSortKey, setCampaignSortKey] = useState<'name' | 'description' | 'trigger_event' | 'template_name' | 'created_at' | 'is_active'>('created_at');
+  const [campaignSortDir, setCampaignSortDir] = useState<'asc' | 'desc'>('desc');
   const [newTemplate, setNewTemplate] = useState({
     name: '',
     subject: '',
@@ -114,7 +118,6 @@ const EmailAutomationSimple: React.FC = () => {
         setPage(1);
       }
     } catch (error) {
-      console.error('Error loading templates:', error);
       toast({
         title: "Error",
         description: "Failed to load email templates",
@@ -125,16 +128,64 @@ const EmailAutomationSimple: React.FC = () => {
     }
   };
 
+  // Sorting helpers
+  const toggleTemplateSort = (key: typeof templateSortKey) => {
+    setTemplateSortKey((prevKey) => {
+      if (prevKey === key) {
+        setTemplateSortDir((prevDir) => (prevDir === 'asc' ? 'desc' : 'asc'));
+        return prevKey;
+      }
+      setTemplateSortDir('asc');
+      return key;
+    });
+  };
+
+  const toggleCampaignSort = (key: typeof campaignSortKey) => {
+    setCampaignSortKey((prevKey) => {
+      if (prevKey === key) {
+        setCampaignSortDir((prevDir) => (prevDir === 'asc' ? 'desc' : 'asc'));
+        return prevKey;
+      }
+      setCampaignSortDir('asc');
+      return key;
+    });
+  };
+
+  const sortBy = <T,>(items: T[], key: keyof T, dir: 'asc' | 'desc') => {
+    const sorted = [...items].sort((a: any, b: any) => {
+      const va = a?.[key];
+      const vb = b?.[key];
+      // Date strings
+      if (key === 'created_at') {
+        const da = new Date(va || 0).getTime();
+        const db = new Date(vb || 0).getTime();
+        return da - db;
+      }
+      // Booleans
+      if (typeof va === 'boolean' || typeof vb === 'boolean') {
+        return Number(va) - Number(vb);
+      }
+      // Numbers
+      if (typeof va === 'number' && typeof vb === 'number') {
+        return va - vb;
+      }
+      // Strings default
+      const sa = String(va ?? '').toLowerCase();
+      const sb = String(vb ?? '').toLowerCase();
+      if (sa < sb) return -1;
+      if (sa > sb) return 1;
+      return 0;
+    });
+    return dir === 'asc' ? sorted : sorted.reverse();
+  };
+
   const loadAnalytics = async () => {
     try {
-      console.log('Loading analytics...');
       setAnalyticsLoading(true);
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/email-automation/analytics`, {
         headers: getAuthHeaders()
       });
-      console.log('Analytics response status:', response.status);
       const data = await response.json();
-      console.log('Analytics response data:', data);
       if (data.success) {
         // Ensure all numeric fields are properly formatted
         const formattedData = {
@@ -149,10 +200,7 @@ const EmailAutomationSimple: React.FC = () => {
           bounced_count: parseInt(data.data.bounced_count) || 0
         };
         setAnalytics(formattedData);
-        console.log('Analytics loaded successfully:', formattedData);
-        console.log('avg_opens type:', typeof formattedData.avg_opens, 'value:', formattedData.avg_opens);
       } else {
-        console.error('Failed to load analytics:', data.message);
         // Set default analytics if failed
         setAnalytics({
           total_sends: 0,
@@ -484,7 +532,7 @@ const EmailAutomationSimple: React.FC = () => {
                     )}
                   </p>
                 </div>
-                <Send className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                <Send className="h-6 w-6 text-brand-purple" />
               </div>
             </CardContent>
           </Card>
@@ -502,7 +550,7 @@ const EmailAutomationSimple: React.FC = () => {
                     )}
                   </p>
                 </div>
-                <Mail className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                <Mail className="h-6 w-6 text-emerald-500" />
               </div>
             </CardContent>
           </Card>
@@ -520,7 +568,7 @@ const EmailAutomationSimple: React.FC = () => {
                     )}
                   </p>
                 </div>
-                <BarChart3 className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                <BarChart3 className="h-6 w-6 text-blue-500" />
               </div>
             </CardContent>
           </Card>
@@ -538,7 +586,7 @@ const EmailAutomationSimple: React.FC = () => {
                     )}
                   </p>
                 </div>
-                <Mail className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                <Mail className="h-6 w-6 text-rose-500" />
               </div>
             </CardContent>
           </Card>
@@ -546,23 +594,23 @@ const EmailAutomationSimple: React.FC = () => {
 
         {/* Tabs */}
         <div>
-          <nav className="flex border-b border-gray-200 dark:border-gray-700">
+          <nav className="flex gap-2 p-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900/40 shadow-sm">
             <button
               onClick={() => setActiveTab('templates')}
-              className={`flex-1 py-3 px-4 text-sm font-medium ${
+              className={`flex-1 py-2.5 px-4 text-sm font-medium rounded-md transition-colors ${
                 activeTab === 'templates'
-                  ? 'text-gray-900 dark:text-gray-100 border-b-2 border-purple-600'
-                  : 'text-gray-600 dark:text-gray-300'
+                  ? 'bg-purple-50 dark:bg-purple-900/20 text-brand-purple shadow-inner'
+                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800'
               }`}
             >
               Templates ({templates.length})
             </button>
             <button
               onClick={() => setActiveTab('campaigns')}
-              className={`flex-1 py-3 px-4 text-sm font-medium ${
+              className={`flex-1 py-2.5 px-4 text-sm font-medium rounded-md transition-colors ${
                 activeTab === 'campaigns'
-                  ? 'text-gray-900 dark:text-gray-100 border-b-2 border-purple-600'
-                  : 'text-gray-600 dark:text-gray-300'
+                  ? 'bg-purple-50 dark:bg-purple-900/20 text-brand-purple shadow-inner'
+                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800'
               }`}
             >
               Campaigns ({campaigns.length})
@@ -574,10 +622,10 @@ const EmailAutomationSimple: React.FC = () => {
                   loadAnalytics();
                 }
               }}
-              className={`flex-1 py-3 px-4 text-sm font-medium ${
+              className={`flex-1 py-2.5 px-4 text-sm font-medium rounded-md transition-colors ${
                 activeTab === 'analytics'
-                  ? 'text-gray-900 dark:text-gray-100 border-b-2 border-purple-600'
-                  : 'text-gray-600 dark:text-gray-300'
+                  ? 'bg-purple-50 dark:bg-purple-900/20 text-brand-purple shadow-inner'
+                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800'
               }`}
             >
               Analytics
@@ -587,7 +635,7 @@ const EmailAutomationSimple: React.FC = () => {
 
         {/* Main Content */}
         <Card>
-          <CardHeader>
+          <CardHeader className="pb-2">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <CardTitle className="text-base">
                 {activeTab === 'templates' && 'Email Templates'}
@@ -628,7 +676,8 @@ const EmailAutomationSimple: React.FC = () => {
               )}
             </div>
           </CardHeader>
-          <CardContent className="p-6">
+          <CardContent className="pt-0 p-4 md:p-6">
+          <div key={activeTab} className="page-content animate-fade-in-slow">
           {/* Templates Tab - Table View with Pagination */}
           {activeTab === 'templates' && (
             <>
@@ -638,7 +687,7 @@ const EmailAutomationSimple: React.FC = () => {
                   <span className="ml-2 text-gray-600">Loading templates...</span>
                 </div>
               ) : templates.length > 0 ? (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="text-sm text-gray-600">Showing {pageSize === 0 ? templates.length : Math.min(page * pageSize, templates.length)} of {templates.length}</div>
                     <div className="flex items-center gap-2">
@@ -656,63 +705,117 @@ const EmailAutomationSimple: React.FC = () => {
                     </div>
                   </div>
 
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead className="hidden md:table-cell">Subject</TableHead>
-                        <TableHead className="hidden sm:table-cell">Type</TableHead>
-                        <TableHead className="hidden lg:table-cell">Category</TableHead>
-                        <TableHead className="hidden md:table-cell">Created</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="text-center w-0">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {(pageSize === 0 ? templates : templates.slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize)).map((template) => (
-                        <TableRow key={template.id}>
-                          <TableCell className="font-medium break-words max-w-[220px]">{template.name}</TableCell>
-                          <TableCell className="hidden md:table-cell break-words max-w-[400px]">{template.subject}</TableCell>
-                          <TableCell className="hidden sm:table-cell"><Badge variant="outline">{template.template_type}</Badge></TableCell>
-                          <TableCell className="hidden lg:table-cell"><Badge variant="outline">{template.category}</Badge></TableCell>
-                          <TableCell className="hidden md:table-cell">{new Date(template.created_at).toLocaleDateString()}</TableCell>
-                          <TableCell>
-                            <Badge variant={template.is_active ? 'default' : 'secondary'}>
-                              {template.is_active ? 'Active' : 'Inactive'}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-center">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="mx-auto">
-                                  <MoreHorizontal className="h-5 w-5" />
-                                  <span className="sr-only">Open actions</span>
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="w-44">
-                                <DropdownMenuItem onClick={() => handlePreview(template)} className="cursor-pointer">
-                                  <Eye className="h-4 w-4 mr-2" />
-                                  Preview
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleEdit(template)} className="cursor-pointer">
-                                  <Edit className="h-4 w-4 mr-2" />
-                                  Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => { setSelectedTemplateForTest(template); setTestEmailModalOpen(true); }} className="cursor-pointer">
-                                  <Send className="h-4 w-4 mr-2" />
-                                  Test
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => openDeleteModal(template)} className="cursor-pointer text-red-600 focus:text-red-700">
-                                  <Trash2 className="h-4 w-4 mr-2" />
-                                  Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
+                  <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900/40 shadow-sm">
+                    <Table>
+                      <TableHeader className="bg-gray-50 dark:bg-slate-800/50">
+                        <TableRow>
+                          <TableHead className="text-gray-600 w-16">No</TableHead>
+                          <TableHead className="text-gray-600">
+                            <button className="flex items-center gap-1" onClick={() => toggleTemplateSort('name')}>
+                              Name
+                              <span className={`inline-flex flex-col leading-none ${templateSortKey === 'name' ? 'text-brand-purple' : 'text-gray-400'}`}>
+                                <ArrowUp className="h-3 w-3 -mb-0.5" />
+                                <ArrowDown className="h-3 w-3" />
+                              </span>
+                            </button>
+                          </TableHead>
+                          <TableHead className="hidden md:table-cell text-gray-600">
+                            <button className="flex items-center gap-1" onClick={() => toggleTemplateSort('subject')}>
+                              Subject
+                              <span className={`inline-flex flex-col leading-none ${templateSortKey === 'subject' ? 'text-brand-purple' : 'text-gray-400'}`}>
+                                <ArrowUp className="h-3 w-3 -mb-0.5" />
+                                <ArrowDown className="h-3 w-3" />
+                              </span>
+                            </button>
+                          </TableHead>
+                          <TableHead className="hidden sm:table-cell text-gray-600">
+                            <button className="flex items-center gap-1" onClick={() => toggleTemplateSort('template_type')}>
+                              Type
+                              <span className={`inline-flex flex-col leading-none ${templateSortKey === 'template_type' ? 'text-brand-purple' : 'text-gray-400'}`}>
+                                <ArrowUp className="h-3 w-3 -mb-0.5" />
+                                <ArrowDown className="h-3 w-3" />
+                              </span>
+                            </button>
+                          </TableHead>
+                          <TableHead className="hidden lg:table-cell text-gray-600">
+                            <button className="flex items-center gap-1" onClick={() => toggleTemplateSort('category')}>
+                              Category
+                              <span className={`inline-flex flex-col leading-none ${templateSortKey === 'category' ? 'text-brand-purple' : 'text-gray-400'}`}>
+                                <ArrowUp className="h-3 w-3 -mb-0.5" />
+                                <ArrowDown className="h-3 w-3" />
+                              </span>
+                            </button>
+                          </TableHead>
+                          <TableHead className="hidden md:table-cell text-gray-600">
+                            <button className="flex items-center gap-1" onClick={() => toggleTemplateSort('created_at')}>
+                              Created
+                              <span className={`inline-flex flex-col leading-none ${templateSortKey === 'created_at' ? 'text-brand-purple' : 'text-gray-400'}`}>
+                                <ArrowUp className="h-3 w-3 -mb-0.5" />
+                                <ArrowDown className="h-3 w-3" />
+                              </span>
+                            </button>
+                          </TableHead>
+                          <TableHead className="text-gray-600">
+                            <button className="flex items-center gap-1" onClick={() => toggleTemplateSort('is_active')}>
+                              Status
+                              <span className={`inline-flex flex-col leading-none ${templateSortKey === 'is_active' ? 'text-brand-purple' : 'text-gray-400'}`}>
+                                <ArrowUp className="h-3 w-3 -mb-0.5" />
+                                <ArrowDown className="h-3 w-3" />
+                              </span>
+                            </button>
+                          </TableHead>
+                          <TableHead className="text-center w-0 text-gray-600">Actions</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {(pageSize === 0 ? sortBy(templates, templateSortKey, templateSortDir) : sortBy(templates, templateSortKey, templateSortDir).slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize)).map((template, index) => (
+                          <TableRow key={template.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/40 transition-colors">
+                            <TableCell className="text-center text-gray-500 font-medium">
+                              {(page - 1) * pageSize + index + 1}
+                            </TableCell>
+                            <TableCell className="font-medium break-words max-w-[220px] align-middle">{template.name}</TableCell>
+                            <TableCell className="hidden md:table-cell break-words max-w-[400px] align-middle">{template.subject}</TableCell>
+                            <TableCell className="hidden sm:table-cell align-middle"><Badge variant="outline">{template.template_type}</Badge></TableCell>
+                            <TableCell className="hidden lg:table-cell align-middle"><Badge variant="outline">{template.category}</Badge></TableCell>
+                            <TableCell className="hidden md:table-cell align-middle">{new Date(template.created_at).toLocaleDateString()}</TableCell>
+                            <TableCell className="align-middle">
+                              <Badge variant={template.is_active ? 'default' : 'secondary'}>
+                                {template.is_active ? 'Active' : 'Inactive'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-center align-middle">
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="icon" className="mx-auto text-gray-500 hover:text-gray-900">
+                                    <MoreHorizontal className="h-5 w-5" />
+                                    <span className="sr-only">Open actions</span>
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-44">
+                                  <DropdownMenuItem onClick={() => handlePreview(template)} className="cursor-pointer">
+                                    <Eye className="h-4 w-4 mr-2" />
+                                    Preview
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleEdit(template)} className="cursor-pointer">
+                                    <Edit className="h-4 w-4 mr-2" />
+                                    Edit
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => { setSelectedTemplateForTest(template); setTestEmailModalOpen(true); }} className="cursor-pointer">
+                                    <Send className="h-4 w-4 mr-2" />
+                                    Test
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => openDeleteModal(template)} className="cursor-pointer text-red-600 focus:text-red-700">
+                                    <Trash2 className="h-4 w-4 mr-2" />
+                                    Delete
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
 
                   {pageSize !== 0 && templates.length > pageSize && (
                     <Pagination className="justify-end">
@@ -789,62 +892,116 @@ const EmailAutomationSimple: React.FC = () => {
                     </div>
                   </div>
 
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead className="hidden md:table-cell">Description</TableHead>
-                        <TableHead className="hidden sm:table-cell">Trigger</TableHead>
-                        <TableHead className="hidden lg:table-cell">Template</TableHead>
-                        <TableHead className="hidden md:table-cell">Created</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="text-center w-0">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {(campaignPageSize === 0 ? campaigns : campaigns.slice((campaignPage - 1) * campaignPageSize, (campaignPage - 1) * campaignPageSize + campaignPageSize)).map((campaign) => (
-                        <TableRow key={campaign.id}>
-                          <TableCell className="font-medium break-words max-w-[260px]">{campaign.name}</TableCell>
-                          <TableCell className="hidden md:table-cell break-words max-w-[480px]">{campaign.description}</TableCell>
-                          <TableCell className="hidden sm:table-cell"><Badge variant="outline">{campaign.trigger_event}</Badge></TableCell>
-                          <TableCell className="hidden lg:table-cell"><Badge variant="outline">{campaign.template_name || 'No Template'}</Badge></TableCell>
-                          <TableCell className="hidden md:table-cell">{new Date(campaign.created_at).toLocaleDateString()}</TableCell>
-                          <TableCell>
-                            <Badge variant={campaign.is_active ? 'default' : 'secondary'}>
-                              {campaign.is_active ? 'Active' : 'Inactive'}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-center">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="mx-auto">
-                                  <MoreHorizontal className="h-5 w-5" />
-                                  <span className="sr-only">Open actions</span>
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="w-48">
-                                <DropdownMenuItem onClick={() => setEditingCampaign(campaign)} className="cursor-pointer">
-                                  <Edit className="h-4 w-4 mr-2" />
-                                  Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleToggleCampaignStatus(campaign)} className="cursor-pointer">
-                                  {campaign.is_active ? (
-                                    <>
-                                      <Pause className="h-4 w-4 mr-2" /> Deactivate
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Play className="h-4 w-4 mr-2" /> Activate
-                                    </>
-                                  )}
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
+                  <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900/40 shadow-sm">
+                    <Table>
+                      <TableHeader className="bg-gray-50 dark:bg-slate-800/50">
+                        <TableRow>
+                          <TableHead className="text-gray-600 w-16">No</TableHead>
+                          <TableHead className="text-gray-600">
+                            <button className="flex items-center gap-1" onClick={() => toggleCampaignSort('name')}>
+                              Name
+                              <span className={`inline-flex flex-col leading-none ${campaignSortKey === 'name' ? 'text-brand-purple' : 'text-gray-400'}`}>
+                                <ArrowUp className="h-3 w-3 -mb-0.5" />
+                                <ArrowDown className="h-3 w-3" />
+                              </span>
+                            </button>
+                          </TableHead>
+                          <TableHead className="hidden md:table-cell text-gray-600">
+                            <button className="flex items-center gap-1" onClick={() => toggleCampaignSort('description')}>
+                              Description
+                              <span className={`inline-flex flex-col leading-none ${campaignSortKey === 'description' ? 'text-brand-purple' : 'text-gray-400'}`}>
+                                <ArrowUp className="h-3 w-3 -mb-0.5" />
+                                <ArrowDown className="h-3 w-3" />
+                              </span>
+                            </button>
+                          </TableHead>
+                          <TableHead className="hidden sm:table-cell text-gray-600">
+                            <button className="flex items-center gap-1" onClick={() => toggleCampaignSort('trigger_event')}>
+                              Trigger
+                              <span className={`inline-flex flex-col leading-none ${campaignSortKey === 'trigger_event' ? 'text-brand-purple' : 'text-gray-400'}`}>
+                                <ArrowUp className="h-3 w-3 -mb-0.5" />
+                                <ArrowDown className="h-3 w-3" />
+                              </span>
+                            </button>
+                          </TableHead>
+                          <TableHead className="hidden lg:table-cell text-gray-600">
+                            <button className="flex items-center gap-1" onClick={() => toggleCampaignSort('template_name')}>
+                              Template
+                              <span className={`inline-flex flex-col leading-none ${campaignSortKey === 'template_name' ? 'text-brand-purple' : 'text-gray-400'}`}>
+                                <ArrowUp className="h-3 w-3 -mb-0.5" />
+                                <ArrowDown className="h-3 w-3" />
+                              </span>
+                            </button>
+                          </TableHead>
+                          <TableHead className="hidden md:table-cell text-gray-600">
+                            <button className="flex items-center gap-1" onClick={() => toggleCampaignSort('created_at')}>
+                              Created
+                              <span className={`inline-flex flex-col leading-none ${campaignSortKey === 'created_at' ? 'text-brand-purple' : 'text-gray-400'}`}>
+                                <ArrowUp className="h-3 w-3 -mb-0.5" />
+                                <ArrowDown className="h-3 w-3" />
+                              </span>
+                            </button>
+                          </TableHead>
+                          <TableHead className="text-gray-600">
+                            <button className="flex items-center gap-1" onClick={() => toggleCampaignSort('is_active')}>
+                              Status
+                              <span className={`inline-flex flex-col leading-none ${campaignSortKey === 'is_active' ? 'text-brand-purple' : 'text-gray-400'}`}>
+                                <ArrowUp className="h-3 w-3 -mb-0.5" />
+                                <ArrowDown className="h-3 w-3" />
+                              </span>
+                            </button>
+                          </TableHead>
+                          <TableHead className="text-center w-0 text-gray-600">Actions</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {(campaignPageSize === 0 ? sortBy(campaigns, campaignSortKey, campaignSortDir) : sortBy(campaigns, campaignSortKey, campaignSortDir).slice((campaignPage - 1) * campaignPageSize, (campaignPage - 1) * campaignPageSize + campaignPageSize)).map((campaign, index) => (
+                          <TableRow key={campaign.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/40 transition-colors">
+                            <TableCell className="text-center text-gray-500 font-medium">
+                              {(campaignPage - 1) * campaignPageSize + index + 1}
+                            </TableCell>
+                            <TableCell className="font-medium break-words max-w-[260px] align-middle">{campaign.name}</TableCell>
+                            <TableCell className="hidden md:table-cell break-words max-w-[480px] align-middle">{campaign.description}</TableCell>
+                            <TableCell className="hidden sm:table-cell align-middle"><Badge variant="outline">{campaign.trigger_event}</Badge></TableCell>
+                            <TableCell className="hidden lg:table-cell align-middle"><Badge variant="outline">{campaign.template_name || 'No Template'}</Badge></TableCell>
+                            <TableCell className="hidden md:table-cell align-middle">{new Date(campaign.created_at).toLocaleDateString()}</TableCell>
+                            <TableCell className="align-middle">
+                              <Badge variant={campaign.is_active ? 'default' : 'secondary'}>
+                                {campaign.is_active ? 'Active' : 'Inactive'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-center align-middle">
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="icon" className="mx-auto text-gray-500 hover:text-gray-900">
+                                    <MoreHorizontal className="h-5 w-5" />
+                                    <span className="sr-only">Open actions</span>
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-48">
+                                  <DropdownMenuItem onClick={() => setEditingCampaign(campaign)} className="cursor-pointer">
+                                    <Edit className="h-4 w-4 mr-2" />
+                                    Edit
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleToggleCampaignStatus(campaign)} className="cursor-pointer">
+                                    {campaign.is_active ? (
+                                      <>
+                                        <Pause className="h-4 w-4 mr-2" /> Deactivate
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Play className="h-4 w-4 mr-2" /> Activate
+                                      </>
+                                    )}
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
 
                   {campaignPageSize !== 0 && campaigns.length > campaignPageSize && (
                     <Pagination className="justify-end">
@@ -1017,6 +1174,7 @@ const EmailAutomationSimple: React.FC = () => {
               )}
             </div>
           )}
+          </div>
         </CardContent>
       </Card>
 

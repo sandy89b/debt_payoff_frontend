@@ -51,6 +51,9 @@ export const LeadManagement: React.FC = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isClosingModal, setIsClosingModal] = useState(false);
+  const [convertModalOpen, setConvertModalOpen] = useState(false);
+  const [confirmConvertId, setConfirmConvertId] = useState<number | null>(null);
+  const [isConverting, setIsConverting] = useState(false);
 
   const [newLead, setNewLead] = useState({
     firstName: '',
@@ -147,9 +150,11 @@ export const LeadManagement: React.FC = () => {
         lead.id === leadId ? { ...lead, status: newStatus as any } : lead
       ));
 
+      // Show success message with automation info
+      const automationMessage = getAutomationMessage(newStatus);
       toast({
         title: "Status Updated",
-        description: "Lead status has been updated successfully.",
+        description: `Lead status has been updated successfully. ${automationMessage}`,
       });
 
       // Reload statistics
@@ -161,6 +166,19 @@ export const LeadManagement: React.FC = () => {
         description: "Failed to update lead status. Please try again.",
         variant: "destructive",
       });
+    }
+  };
+
+  const getAutomationMessage = (status: string) => {
+    switch (status) {
+      case 'nurturing':
+        return 'A nurturing email has been sent to the lead.';
+      case 'converted':
+        return 'A welcome email has been sent to the converted lead.';
+      case 'lost':
+        return 'A follow-up email has been sent to the lead.';
+      default:
+        return '';
     }
   };
 
@@ -212,6 +230,7 @@ export const LeadManagement: React.FC = () => {
 
   const handleConvertLead = async (leadId: number) => {
     try {
+      setIsConverting(true);
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/leads/${leadId}/convert`, {
         method: 'POST',
         headers: {
@@ -225,10 +244,17 @@ export const LeadManagement: React.FC = () => {
         throw new Error(r?.message || 'Failed to convert lead');
       }
 
-      toast({ title: 'Lead converted', description: 'Lead has been marked as converted and linked to the user.' });
+      toast({ 
+        title: 'Lead converted', 
+        description: 'Lead has been marked as converted and linked to the user. A welcome email has been sent to the lead.' 
+      });
       await Promise.all([loadLeads(), loadStatistics()]);
+      setConvertModalOpen(false);
+      setConfirmConvertId(null);
     } catch (error: any) {
       toast({ title: 'Error', description: error.message || 'Failed to convert lead.', variant: 'destructive' });
+    } finally {
+      setIsConverting(false);
     }
   };
 
@@ -306,6 +332,15 @@ export const LeadManagement: React.FC = () => {
         <div className="mb-6">
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Lead Management</h1>
           <p className="text-sm text-gray-600 dark:text-gray-400">Manage and track your debt calculator leads</p>
+          <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+            <div className="flex items-center gap-2">
+              <Mail className="h-4 w-4 text-blue-600" />
+              <span className="text-sm text-blue-800 dark:text-blue-200 font-medium">Email Automation Active</span>
+            </div>
+            <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+              Status changes automatically trigger personalized emails to leads. Nurturing, converted, and lost statuses will send appropriate follow-up emails.
+            </p>
+          </div>
         </div>
 
         {/* Actions */}
@@ -371,7 +406,7 @@ export const LeadManagement: React.FC = () => {
             </DialogContent>
           </Dialog>
           <Button onClick={exportLeads} variant="outline" className="px-4 py-2">
-            <Download className="h-5 w-5 mr-2" />
+            <Download className="h-5 w-5 mr-2 text-brand-purple" />
             Export CSV
           </Button>
         </div>
@@ -386,7 +421,7 @@ export const LeadManagement: React.FC = () => {
                     <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Total Leads</p>
                     <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{statistics.totalLeads}</p>
                   </div>
-                  <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                  <Users className="h-6 w-6 text-brand-purple" />
                 </div>
               </CardContent>
             </Card>
@@ -398,7 +433,7 @@ export const LeadManagement: React.FC = () => {
                     <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">New Leads</p>
                     <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{statistics.newLeads}</p>
                   </div>
-                  <Clock className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                  <Clock className="h-6 w-6 text-amber-500" />
                 </div>
               </CardContent>
             </Card>
@@ -410,7 +445,7 @@ export const LeadManagement: React.FC = () => {
                     <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Converted</p>
                     <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{statistics.convertedLeads}</p>
                   </div>
-                  <CheckCircle className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                  <CheckCircle className="h-6 w-6 text-emerald-500" />
                 </div>
               </CardContent>
             </Card>
@@ -422,7 +457,7 @@ export const LeadManagement: React.FC = () => {
                     <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Conversion Rate</p>
                     <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{statistics.conversionRate.toFixed(1)}%</p>
                   </div>
-                  <TrendingUp className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                  <TrendingUp className="h-6 w-6 text-blue-500" />
                 </div>
               </CardContent>
             </Card>
@@ -498,12 +533,12 @@ export const LeadManagement: React.FC = () => {
                       <td className="p-6">
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
-                            <Mail className="h-4 w-4 text-gray-400" />
+                            <Mail className="h-4 w-4 text-brand-purple" />
                             <span className="text-sm text-gray-700 dark:text-gray-300">{lead.email}</span>
                           </div>
                           {lead.phone && (
                             <div className="flex items-center gap-2">
-                              <Phone className="h-4 w-4 text-gray-400" />
+                              <Phone className="h-4 w-4 text-emerald-600" />
                               <span className="text-sm text-gray-700 dark:text-gray-300">{lead.phone}</span>
                             </div>
                           )}
@@ -512,23 +547,31 @@ export const LeadManagement: React.FC = () => {
                       <td className="p-6">
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
-                            <DollarSign className="h-4 w-4 text-gray-400" />
+                            <DollarSign className="h-4 w-4 text-rose-500" />
                             <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">${lead.totalDebt.toLocaleString()}</span>
                           </div>
                           <p className="text-xs text-gray-600 dark:text-gray-400">{lead.debtCount} debts</p>
                         </div>
                       </td>
                       <td className="p-6">
-                        <Badge className={`${getStatusColor(lead.status)} px-3 py-1 text-sm font-semibold`}>
-                          <span className="flex items-center gap-1">
-                            {getStatusIcon(lead.status)}
-                            {lead.status}
-                          </span>
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <Badge className={`${getStatusColor(lead.status)} px-3 py-1 text-sm font-semibold`}>
+                            <span className="flex items-center gap-1">
+                              {getStatusIcon(lead.status)}
+                              {lead.status}
+                            </span>
+                          </Badge>
+                          {lead.status !== 'new' && (
+                            <div className="flex items-center gap-1 text-xs text-gray-500">
+                              <Mail className="h-3 w-3" />
+                              <span>Email sent</span>
+                            </div>
+                          )}
+                        </div>
                       </td>
                       <td className="p-6">
                         <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-gray-400" />
+                          <Calendar className="h-4 w-4 text-slate-500" />
                           <span className="text-sm text-gray-700 dark:text-gray-300">{new Date(lead.createdAt).toLocaleDateString()}</span>
                         </div>
                       </td>
@@ -552,7 +595,7 @@ export const LeadManagement: React.FC = () => {
                             <Button 
                               size="sm" 
                               variant="outline"
-                              onClick={() => handleConvertLead(lead.id)}
+                              onClick={() => { setConfirmConvertId(lead.id); setConvertModalOpen(true); }}
                             >
                               <UserCheck className="h-4 w-4 mr-1" /> Convert
                             </Button>
@@ -567,7 +610,7 @@ export const LeadManagement: React.FC = () => {
 
             {filteredLeads.length === 0 && (
               <div className="text-center py-12">
-                <Users className="h-8 w-8 text-gray-400 mx-auto mb-4" />
+                <Users className="h-8 w-8 text-brand-purple mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-400 mb-2">No leads found</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-500">No leads match your current search criteria.</p>
               </div>
@@ -601,6 +644,30 @@ export const LeadManagement: React.FC = () => {
             </Button>
           </div>
         )}
+        {/* Confirm Convert Modal */}
+        <Dialog open={convertModalOpen} onOpenChange={setConvertModalOpen}>
+          <DialogContent className="sm:max-w-[420px]">
+            <DialogHeader>
+              <DialogTitle>Convert lead to user?</DialogTitle>
+            </DialogHeader>
+            <p className="text-sm text-gray-600">
+              This will mark the lead as converted and link it to a user account. Do you want to continue?
+            </p>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setConvertModalOpen(false)} disabled={isConverting}>Cancel</Button>
+              <Button onClick={() => confirmConvertId && handleConvertLead(confirmConvertId)} disabled={isConverting}>
+                {isConverting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                    Converting...
+                  </>
+                ) : (
+                  'Confirm'
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

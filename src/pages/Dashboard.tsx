@@ -146,7 +146,7 @@ const DashboardOverview: React.FC = () => {
                   <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{currency(totalActiveBalance)}</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Total outstanding</p>
                 </div>
-                <DollarSign className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                <DollarSign className="h-6 w-6 text-rose-500" />
               </div>
             </CardContent>
           </Card>
@@ -159,7 +159,7 @@ const DashboardOverview: React.FC = () => {
                   <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{currency(totalActiveMinPayments)}</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Monthly commitment</p>
                 </div>
-                <TrendingUp className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                <TrendingUp className="h-6 w-6 text-blue-500" />
               </div>
             </CardContent>
           </Card>
@@ -172,7 +172,7 @@ const DashboardOverview: React.FC = () => {
                   <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{active.length}</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Accounts open</p>
                 </div>
-                <CheckCircle2 className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                <CheckCircle2 className="h-6 w-6 text-brand-purple" />
               </div>
             </CardContent>
           </Card>
@@ -185,7 +185,7 @@ const DashboardOverview: React.FC = () => {
                   <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{weightedApr.toFixed(2)}%</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Average rate</p>
                 </div>
-                <Percent className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                <Percent className="h-6 w-6 text-green-500" />
               </div>
             </CardContent>
           </Card>
@@ -226,7 +226,7 @@ const DashboardOverview: React.FC = () => {
                   onClick={() => navigate('/calculator')} 
                   className="h-auto p-3 flex flex-col items-center gap-2"
                 >
-                  <TrendingUp className="h-5 w-5" />
+                  <TrendingUp className="h-5 w-5 text-brand-purple" />
                   <span className="text-sm">Calculator</span>
                 </Button>
                 <Button 
@@ -234,7 +234,7 @@ const DashboardOverview: React.FC = () => {
                   onClick={() => navigate('/calendar')} 
                   className="h-auto p-3 flex flex-col items-center gap-2"
                 >
-                  <Calendar className="h-5 w-5" />
+                  <Calendar className="h-5 w-5 text-brand-purple" />
                   <span className="text-sm">Calendar</span>
                 </Button>
                 <Button 
@@ -242,7 +242,7 @@ const DashboardOverview: React.FC = () => {
                   onClick={() => navigate('/goals')} 
                   className="h-auto p-3 flex flex-col items-center gap-2"
                 >
-                  <Goal className="h-5 w-5" />
+                  <Goal className="h-5 w-5 text-brand-purple" />
                   <span className="text-sm">Goals</span>
                 </Button>
                 <Button 
@@ -250,7 +250,7 @@ const DashboardOverview: React.FC = () => {
                   onClick={() => navigate('/reminders')} 
                   className="h-auto p-3 flex flex-col items-center gap-2"
                 >
-                  <Bell className="h-5 w-5" />
+                  <Bell className="h-5 w-5 text-brand-purple" />
                   <span className="text-sm">Reminders</span>
                 </Button>
               </div>
@@ -262,7 +262,7 @@ const DashboardOverview: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/framework')}>
             <CardContent className="p-4 flex items-center gap-3">
-              <GraduationCap className="h-6 w-6 text-gray-400"/>
+              <GraduationCap className="h-6 w-6 text-blue-500"/>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-gray-100">Framework Steps</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Biblical and practical steps toward freedom</div>
@@ -272,7 +272,7 @@ const DashboardOverview: React.FC = () => {
 
           <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/devotionals')}>
             <CardContent className="p-4 flex items-center gap-3">
-              <BookOpen className="h-6 w-6 text-gray-400"/>
+              <BookOpen className="h-6 w-6 text-green-500"/>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-gray-100">Daily Devotionals</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Stay motivated and focused</div>
@@ -282,7 +282,7 @@ const DashboardOverview: React.FC = () => {
 
           <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/achievements')}>
             <CardContent className="p-4 flex items-center gap-3">
-              <Trophy className="h-6 w-6 text-gray-400"/>
+              <Trophy className="h-6 w-6 text-amber-500"/>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-gray-100">Achievements</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Milestones you have reached</div>
@@ -292,7 +292,7 @@ const DashboardOverview: React.FC = () => {
 
           <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/accountability')}>
             <CardContent className="p-4 flex items-center gap-3">
-              <Users className="h-6 w-6 text-gray-400"/>
+              <Users className="h-6 w-6 text-purple-500"/>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-gray-100">Accountability</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Invite support and track commitments</div>
@@ -302,7 +302,7 @@ const DashboardOverview: React.FC = () => {
 
           <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/prayers')}>
             <CardContent className="p-4 flex items-center gap-3">
-              <Heart className="h-6 w-6 text-gray-400"/>
+              <Heart className="h-6 w-6 text-rose-500"/>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-gray-100">Prayer Corner</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Share requests and gratitude</div>
@@ -312,7 +312,7 @@ const DashboardOverview: React.FC = () => {
 
           <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/coaching')}>
             <CardContent className="p-4 flex items-center gap-3">
-              <HeartHandshake className="h-6 w-6 text-gray-400"/>
+              <HeartHandshake className="h-6 w-6 text-violet-500"/>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-gray-100">Coaching</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Get help from our team</div>
@@ -322,7 +322,7 @@ const DashboardOverview: React.FC = () => {
 
           <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/income-optimization')}>
             <CardContent className="p-4 flex items-center gap-3">
-              <LineChart className="h-6 w-6 text-gray-400"/>
+              <LineChart className="h-6 w-6 text-emerald-500"/>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-gray-100">Income Optimization</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Increase margin for payoff</div>
@@ -332,7 +332,7 @@ const DashboardOverview: React.FC = () => {
 
           <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/emergency-fund-calculator')}>
             <CardContent className="p-4 flex items-center gap-3">
-              <ShieldCheck className="h-6 w-6 text-gray-400"/>
+              <ShieldCheck className="h-6 w-6 text-rose-500"/>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-gray-100">Emergency Fund</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Build resilience for surprises</div>
@@ -342,7 +342,7 @@ const DashboardOverview: React.FC = () => {
 
           <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/giving-stewardship-tracker')}>
             <CardContent className="p-4 flex items-center gap-3">
-              <HelpingHand className="h-6 w-6 text-gray-400"/>
+              <HelpingHand className="h-6 w-6 text-emerald-600"/>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-gray-100">Giving Tracker</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Track generosity and impact</div>
@@ -352,7 +352,7 @@ const DashboardOverview: React.FC = () => {
 
           <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => navigate('/legacy-planning')}>
             <CardContent className="p-4 flex items-center gap-3">
-              <Settings className="h-6 w-6 text-gray-400"/>
+              <Settings className="h-6 w-6 text-slate-500"/>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-gray-100">Legacy Planning</div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Plan for the long term</div>

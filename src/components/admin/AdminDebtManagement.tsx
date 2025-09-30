@@ -172,7 +172,7 @@ export const AdminDebtManagement: React.FC = () => {
             onClick={() => setView('users')}
             className="px-4 py-2"
           >
-            <Users className="h-4 w-4 mr-2" />
+            <Users className="h-4 w-4 mr-2 text-brand-purple" />
             Users Overview
           </Button>
           <Button 
@@ -180,13 +180,13 @@ export const AdminDebtManagement: React.FC = () => {
             onClick={() => setView('debts')}
             className="px-4 py-2"
           >
-            <DollarSign className="h-4 w-4 mr-2" />
+            <DollarSign className="h-4 w-4 mr-2 text-brand-purple" />
             All Debts
           </Button>
         </div>
 
         {/* Search and Filters */}
-        <Card>
+        <div>
           <CardHeader>
             <CardTitle className="text-base">Search & Filters</CardTitle>
           </CardHeader>
@@ -234,24 +234,24 @@ export const AdminDebtManagement: React.FC = () => {
               )}
             </div>
           </CardContent>
-        </Card>
+        </div>
 
         {view === 'users' ? (
           /* Users Overview */
           <div className="grid gap-4">
             {filteredUsers.map(user => (
               <Card key={user.id}>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <Users className="h-6 w-6 text-gray-400" />
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2.5">
+                      <Users className="h-5 w-5 text-brand-purple" />
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{user.name}</h3>
+                        <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">{user.name}</h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">{user.email}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <Badge variant="outline" className="px-3 py-1">
+                    <div className="flex items-center gap-2.5">
+                      <Badge variant="outline" className="px-2.5 py-0.5">
                         {user.debtFreeProgress}% Debt-Free
                       </Badge>
                       <Button 
@@ -262,40 +262,40 @@ export const AdminDebtManagement: React.FC = () => {
                           setView('debts');
                         }}
                       >
-                        <Eye className="h-4 w-4 mr-2" />
+                        <Eye className="h-4 w-4 mr-2 text-brand-purple" />
                         View Debts
                       </Button>
                     </div>
                   </div>
                 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <div className="flex items-center gap-2 mb-1">
-                        <DollarSign className="h-4 w-4 text-gray-400" />
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <DollarSign className="h-4 w-4 text-rose-500" />
                         <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Debts</p>
                       </div>
-                      <p className="text-xl font-semibold text-gray-900 dark:text-gray-100">{user.totalDebts}</p>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{user.totalDebts}</p>
                     </div>
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <div className="flex items-center gap-2 mb-1">
-                        <TrendingUp className="h-4 w-4 text-gray-400" />
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <TrendingUp className="h-4 w-4 text-blue-500" />
                         <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Active Debts</p>
                       </div>
-                      <p className="text-xl font-semibold text-gray-900 dark:text-gray-100">{user.activeDebts}</p>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{user.activeDebts}</p>
                     </div>
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Eye className="h-4 w-4 text-gray-400" />
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <Eye className="h-4 w-4 text-emerald-500" />
                         <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Paid Off</p>
                       </div>
-                      <p className="text-xl font-semibold text-gray-900 dark:text-gray-100">{user.paidDebts}</p>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{user.paidDebts}</p>
                     </div>
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <div className="flex items-center gap-2 mb-1">
-                        <DollarSign className="h-4 w-4 text-gray-400" />
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <DollarSign className="h-4 w-4 text-rose-500" />
                         <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Balance</p>
                       </div>
-                      <p className="text-xl font-semibold text-gray-900 dark:text-gray-100">{formatCurrency(user.totalBalance)}</p>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{formatCurrency(user.totalBalance)}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -307,60 +307,60 @@ export const AdminDebtManagement: React.FC = () => {
           <div className="grid gap-4">
             {filteredDebts.map(debt => (
               <Card key={debt.id}>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <DollarSign className="h-6 w-6 text-gray-400" />
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2.5">
+                      <DollarSign className="h-5 w-5 text-brand-purple" />
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{debt.debtName}</h3>
+                        <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">{debt.debtName}</h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                           {debt.userName} ({debt.userEmail})
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <Badge className={`${getStatusColor(debt.status)} px-3 py-1 text-sm font-semibold`}>
+                    <div className="flex items-center gap-2.5">
+                      <Badge className={`${getStatusColor(debt.status)} px-2.5 py-0.5 text-xs font-semibold`}>
                         {debt.status}
                       </Badge>
-                      <Badge variant="outline" className="px-3 py-1">
+                      <Badge variant="outline" className="px-2.5 py-0.5 text-xs">
                         {debt.debtType}
                       </Badge>
                     </div>
                   </div>
                 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <div className="flex items-center gap-2 mb-1">
-                        <DollarSign className="h-4 w-4 text-gray-400" />
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <DollarSign className="h-4 w-4 text-rose-500" />
                         <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Current Balance</p>
                       </div>
-                      <p className="text-xl font-semibold text-gray-900 dark:text-gray-100">{formatCurrency(debt.balance)}</p>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{formatCurrency(debt.balance)}</p>
                     </div>
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <div className="flex items-center gap-2 mb-1">
-                        <TrendingUp className="h-4 w-4 text-gray-400" />
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <TrendingUp className="h-4 w-4 text-blue-500" />
                         <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Min Payment</p>
                       </div>
-                      <p className="text-xl font-semibold text-gray-900 dark:text-gray-100">{formatCurrency(debt.minimumPayment)}</p>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{formatCurrency(debt.minimumPayment)}</p>
                     </div>
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <div className="flex items-center gap-2 mb-1">
-                        <TrendingUp className="h-4 w-4 text-gray-400" />
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <TrendingUp className="h-4 w-4 text-brand-purple" />
                         <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Interest Rate</p>
                       </div>
-                      <p className="text-xl font-semibold text-gray-900 dark:text-gray-100">{debt.interestRate.toFixed(2)}%</p>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{debt.interestRate.toFixed(2)}%</p>
                     </div>
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Eye className="h-4 w-4 text-gray-400" />
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <Eye className="h-4 w-4 text-slate-500" />
                         <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Due Date</p>
                       </div>
-                      <p className="text-xl font-semibold text-gray-900 dark:text-gray-100">{debt.dueDate}th</p>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{debt.dueDate}th</p>
                     </div>
                   </div>
                 
                   {debt.description && (
-                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                       <p className="text-sm text-gray-600 dark:text-gray-400">{debt.description}</p>
                     </div>
                   )}
